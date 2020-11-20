@@ -4,9 +4,14 @@ namespace CommitAttempt
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("SUCCES");
+            PrintErrorMessage();
+        }
+
+        static void PrintErrorMessage()
+        {
+            Console.WriteLine("Ghinion");
         }
     }
 }
