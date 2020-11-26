@@ -11,7 +11,7 @@ namespace Json
 
         private static bool IsWrappedInQuotes(string input)
         {
-            return input.Length > 1 && input.Substring(0, 1).Equals("\"") && input.Substring(input.Length - 1, 1).Equals("\"");
+            return input.Length > 1 && input[0].Equals('\"') && input[input.Length - 1].Equals('\"');
         }
 
         private static bool IsNullOrEmpty(string input)
@@ -24,7 +24,7 @@ namespace Json
             const int indexForControlCharacters = 32;
             for (int i = 0; i < input.Length; i++)
             {
-                if (Convert.ToChar(input.Substring(i, 1)) < indexForControlCharacters)
+                if (input[i] < indexForControlCharacters)
                 {
                     return true;
                 }
@@ -41,7 +41,7 @@ namespace Json
 
             while (i < input.Length)
             {
-                if (Convert.ToChar(input.Substring(i, 1)).Equals('\\'))
+                if (input[i].Equals('\\'))
                 {
                     sum += IsValid(validEscapeCharacters, input, i + 1);
                     i++;
@@ -55,7 +55,7 @@ namespace Json
 
         private static int IsValid(char[] validEscapeCharacters, string input, int position)
         {
-            char currentChar = Convert.ToChar(input.Substring(position, 1));
+            char currentChar = input[position];
 
             for (int i = 0; i < validEscapeCharacters.Length; i++)
             {
@@ -63,7 +63,7 @@ namespace Json
                 {
                     return 1;
                 }
-                else if (currentChar.Equals(validEscapeCharacters[i]) && input.Length != position)
+                else if (currentChar.Equals(validEscapeCharacters[i]) && input.Length - 1 != position)
                 {
                     return 0;
                 }
@@ -84,7 +84,7 @@ namespace Json
             const int min = 48;
             for (int i = 0; i < numberOfExpectedChars; i++)
             {
-                char currentChar = Convert.ToChar(numberToCheck.Substring(i, 1));
+                char currentChar = numberToCheck[i];
                 bool betweenDigits = Convert.ToInt32(currentChar) >= min && Convert.ToInt32(currentChar) <= max;
                 bool betweenChars = (currentChar >= 'A' && currentChar <= 'F') || (currentChar >= 'a' && currentChar <= 'f');
                 if (!betweenDigits && !betweenChars)
