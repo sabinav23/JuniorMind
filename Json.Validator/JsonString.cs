@@ -37,7 +37,7 @@ namespace Json
         {
             int sum = 0;
             int i = 0;
-            char[] validEscapeCharacters = { '\\', '/', '\"', '\'', 't', 'b', 'n', 'r', 'f', 'u' };
+            const string validEscapeCharacters = "tb\\n/r\'f\"u";
 
             while (i < input.Length)
             {
@@ -53,7 +53,7 @@ namespace Json
             return sum == 0;
         }
 
-        private static int IsValid(char[] validEscapeCharacters, string input, int position)
+        private static int IsValid(string validEscapeCharacters, string input, int position)
         {
             char currentChar = input[position];
 
@@ -63,7 +63,7 @@ namespace Json
                 {
                     return 1;
                 }
-                else if (currentChar.Equals(validEscapeCharacters[i]) && input.Length - 1 != position)
+                else if (validEscapeCharacters.Contains(currentChar) && input.Length - 1 != position)
                 {
                     return 0;
                 }

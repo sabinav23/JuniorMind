@@ -135,7 +135,7 @@ namespace Json.Facts
         [Fact]
         public void IsAValidHexNumber()
         {
-            Assert.False(IsJsonString(Quoted(@"a\u123g")));
+            Assert.False(IsJsonString(Quoted(@"a\u123l")));
         }
 
         [Fact]
