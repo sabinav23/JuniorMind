@@ -57,19 +57,18 @@ namespace Json
         {
             char currentChar = input[position];
 
-            for (int i = 0; i < validEscapeCharacters.Length; i++)
+            if (currentChar.Equals(validEscapeCharacters[validEscapeCharacters.Length - 1]) && !CheckIfHexadecimalNumber(input.Substring(position + 1)))
             {
-                if (currentChar.Equals(validEscapeCharacters[validEscapeCharacters.Length - 1]) && !CheckIfHexadecimalNumber(input.Substring(position + 1)))
-                {
-                    return 1;
-                }
-                else if (validEscapeCharacters.Contains(currentChar) && input.Length - 1 != position)
-                {
-                    return 0;
-                }
+                return 1;
             }
-
-            return 1;
+            else if (validEscapeCharacters.Contains(currentChar) && input.Length - 1 != position)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         private static bool CheckIfHexadecimalNumber(string numberToCheck)
