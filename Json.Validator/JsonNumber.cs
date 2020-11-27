@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Json
 {
@@ -6,7 +7,7 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !IsNullOrEmpty(input) && !IsChar(input) && !StartsWithZero(input);
+            return !IsNullOrEmpty(input) && !IsChar(input) && !StartsWithZero(input) && HasOnlyOneFractionalPart(input);
         }
 
         private static bool StartsWithZero(string input)
@@ -41,6 +42,13 @@ namespace Json
         private static bool IsNullOrEmpty(string input)
         {
             return string.IsNullOrEmpty(input);
+        }
+
+        private static bool HasOnlyOneFractionalPart(string input)
+        {
+            var count = input.Count(c => c == '.');
+
+            return count <= 1;
         }
     }
 }
