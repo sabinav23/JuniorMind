@@ -7,7 +7,13 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !IsNullOrEmpty(input) && !IsChar(input) && !StartsWithZero(input) && HasOnlyOneFractionalPart(input);
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            bool isAcceptedChar = (IsChar(input) && IsExponent(input)) || !IsChar(input);
+            return isAcceptedChar && !StartsWithZero(input) && HasOnlyOneFractionalPart(input);
         }
 
         private static bool StartsWithZero(string input)
@@ -37,6 +43,11 @@ namespace Json
             }
 
             return false;
+        }
+
+        private static bool IsExponent(string input)
+        {
+            return input.Contains('e') || input.Contains('E');
         }
 
         private static bool IsNullOrEmpty(string input)
