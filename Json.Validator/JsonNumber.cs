@@ -11,7 +11,18 @@ namespace Json
 
         private static bool StartsWithZero(string input)
         {
-            return input.Length > 1 && input[0] == '0';
+            if (input.Length > 1 && input[0] == '0' && input[1] == '.')
+            {
+                return false;
+            }
+            else if (input.Length > 1 && input[0] == '0')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private static bool IsChar(string input)
