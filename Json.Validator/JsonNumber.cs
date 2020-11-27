@@ -48,7 +48,7 @@ namespace Json
         {
             var count = input.Count(c => c == '.');
 
-            return count <= 1;
+            return count <= 1 && input[input.Length - 1] != '.';
         }
     }
 }
