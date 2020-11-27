@@ -6,12 +6,12 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !IsNullOrEmpty(input) && !IsChar(input) && IsGraterOrEqualWithZero(input);
+            return !IsNullOrEmpty(input) && !IsChar(input) && !StartsWithZero(input);
         }
 
-        private static bool IsGraterOrEqualWithZero(string input)
+        private static bool StartsWithZero(string input)
         {
-            return Convert.ToInt32(input) >= 0;
+            return input.Length > 1 && input[0] == '0';
         }
 
         private static bool IsChar(string input)
