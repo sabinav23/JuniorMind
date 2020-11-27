@@ -6,12 +6,7 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            if (input == null)
-            {
-                return false;
-            }
-
-            return !IsChar(input) && IsGraterOrEqualWithZero(input);
+            return !IsNullOrEmpty(input) && !IsChar(input) && IsGraterOrEqualWithZero(input);
         }
 
         private static bool IsGraterOrEqualWithZero(string input)
@@ -30,6 +25,11 @@ namespace Json
             }
 
             return false;
+        }
+
+        private static bool IsNullOrEmpty(string input)
+        {
+            return string.IsNullOrEmpty(input);
         }
     }
 }
