@@ -88,13 +88,11 @@ namespace Json
 
         private static bool HasOnlyAllowedChars(string exponentContent)
         {
-            const int min = 48;
-            const int max = 57;
             const string allowed = "+-";
 
             for (int i = 0; i < exponentContent.Length; i++)
             {
-                if ((exponentContent[i] < min || exponentContent[i] > max) && !allowed.Contains(exponentContent[i]))
+                if ((exponentContent[i] < '1' || exponentContent[i] > '9') && !allowed.Contains(exponentContent[i]))
                 {
                     return false;
                 }
@@ -110,9 +108,10 @@ namespace Json
 
         private static bool HasOnlyOneFractionalPart(string input)
         {
+            int length = input.Length;
             var count = input.Count(c => c == '.');
 
-            return count <= 1 && input[input.Length - 1] != '.';
+            return count <= 1 && input[length - 1] != '.';
         }
     }
 }
