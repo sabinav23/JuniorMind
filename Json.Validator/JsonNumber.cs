@@ -47,7 +47,9 @@ namespace Json
 
         private static bool IsExponent(string input)
         {
-            return input.Contains('e') || input.Contains('E');
+            var counte = input.Count(c => c == 'e');
+            var countE = input.Count(c => c == 'E');
+            return (counte + countE <= 1) && input.Contains('e') || input.Contains('E');
         }
 
         private static bool IsNullOrEmpty(string input)
