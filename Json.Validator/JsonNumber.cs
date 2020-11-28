@@ -12,7 +12,7 @@ namespace Json
                 return false;
             }
 
-            bool isAcceptedChar = (IsChar(input) && IsExponent(input)) || !IsChar(input);
+            bool isAcceptedChar = (IsChar(input) && IsValidExponent(input)) || !IsChar(input);
             return isAcceptedChar && !StartsWithZero(input) && HasOnlyOneFractionalPart(input);
         }
 
@@ -45,11 +45,41 @@ namespace Json
             return false;
         }
 
-        private static bool IsExponent(string input)
+        private static bool IsValidExponent(string input)
         {
             var counte = input.Count(c => c == 'e');
             var countE = input.Count(c => c == 'E');
-            return (counte + countE <= 1) && input.Contains('e') || input.Contains('E');
+            int exponentNumber = counte + countE;
+            if (exponentNumber > 1)
+            {
+                return false;
+            }
+
+            if (exponentNumber == 0)
+            {
+                return false;
+            }
+
+            string toLowercase = input.ToLower();
+            int index = toLowercase.IndexOf('e');
+            return HasOnlyAllowedChars(input.Substring(index + 1));
+        }
+
+        private static bool HasOnlyAllowedChars(string exponentContent)
+        {
+            const int min = 48;
+            const int max = 57;
+            const string allowed = "+-";
+
+            for (int i = 0; i < exponentContent.Length; i++)
+            {
+                if ((exponentContent[i] < min || exponentContent[i] > max) && !allowed.Contains(exponentContent[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static bool IsNullOrEmpty(string input)
