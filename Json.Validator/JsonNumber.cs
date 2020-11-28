@@ -62,7 +62,28 @@ namespace Json
 
             string toLowercase = input.ToLower();
             int index = toLowercase.IndexOf('e');
-            return HasOnlyAllowedChars(input.Substring(index + 1));
+
+            if (toLowercase.Substring(index).Length == 1)
+            {
+                return false;
+            }
+
+            return CompleteExponential(input.Substring(index + 1)) && HasOnlyAllowedChars(input.Substring(index + 1));
+        }
+
+        private static bool CompleteExponential(string exponentContent)
+        {
+            if (exponentContent.Length == 0)
+            {
+                return false;
+            }
+
+            if (exponentContent.Length == 1 && (exponentContent[0].Equals('+') || exponentContent[0].Equals('-')))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static bool HasOnlyAllowedChars(string exponentContent)
