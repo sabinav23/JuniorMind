@@ -12,8 +12,8 @@ namespace Json
                 return false;
             }
 
-            bool isAcceptedChar = (IsChar(input) && IsValidExponent(input)) || !IsChar(input);
-            return isAcceptedChar && !StartsWithLeadingZero(input) && HasOnlyOneFractionalPart(input);
+            bool isAcceptedChar = (!HasOnlyAllowedChars(input) && IsValidExponent(input)) || HasOnlyAllowedChars(input);
+            return isAcceptedChar && !StartsWithLeadingZero(input) && HasMaxOneFractionalPart(input);
         }
 
         private static bool StartsWithLeadingZero(string input)
@@ -21,67 +21,31 @@ namespace Json
             return input.Length > 1 && input[0] == '0' && input[1] != '.';
         }
 
-        private static bool IsChar(string input)
-        {
-            for (int i = 0; i < input.Length; i++)
-            {
-                if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z'))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private static bool IsValidExponent(string input)
         {
-            var counte = input.Count(c => c == 'e');
-            var countE = input.Count(c => c == 'E');
-            int exponentNumber = counte + countE;
-            if (exponentNumber > 1)
+            string toLower = input.ToLower();
+            var count = toLower.Count(c => c == 'e');
+            int index = input.ToLower().IndexOf('e');
+            if (count != 1 || index < input.IndexOf('.') || toLower.Substring(index).Length == 1)
             {
                 return false;
             }
 
-            if (exponentNumber == 0)
-            {
-                return false;
-            }
-
-            string toLowercase = input.ToLower();
-            int index = toLowercase.IndexOf('e');
-
-            if (toLowercase.Substring(index).Length == 1)
-            {
-                return false;
-            }
-
-            return CompleteExponential(input.Substring(index + 1)) && HasOnlyAllowedChars(input.Substring(index + 1));
+            return IsExponentialComplete(input.Substring(index + 1)) && HasOnlyAllowedChars(input.Substring(index + 1));
         }
 
-        private static bool CompleteExponential(string exponentContent)
+        private static bool IsExponentialComplete(string exponentContent)
         {
-            if (exponentContent.Length == 0)
-            {
-                return false;
-            }
-
-            if (exponentContent.Length == 1 && (exponentContent[0].Equals('+') || exponentContent[0].Equals('-')))
-            {
-                return false;
-            }
-
-            return true;
+            return exponentContent.Length != 0 && (exponentContent.Length != 1 || (!exponentContent[0].Equals('+') && !exponentContent[0].Equals('-')));
         }
 
-        private static bool HasOnlyAllowedChars(string exponentContent)
+        private static bool HasOnlyAllowedChars(string toVerify)
         {
-            const string allowed = "+-";
+            const string allowed = "+-.";
 
-            for (int i = 0; i < exponentContent.Length; i++)
+            for (int i = 0; i < toVerify.Length; i++)
             {
-                if ((exponentContent[i] < '1' || exponentContent[i] > '9') && !allowed.Contains(exponentContent[i]))
+                if (!IsDigit(toVerify[i]) && !allowed.Contains(toVerify[i]))
                 {
                     return false;
                 }
@@ -95,12 +59,17 @@ namespace Json
             return string.IsNullOrEmpty(input);
         }
 
-        private static bool HasOnlyOneFractionalPart(string input)
+        private static bool HasMaxOneFractionalPart(string input)
         {
             int length = input.Length;
             var count = input.Count(c => c == '.');
 
             return count <= 1 && input[length - 1] != '.';
+        }
+
+        private static bool IsDigit(char charToVerify)
+        {
+            return charToVerify >= '0' && charToVerify <= '9';
         }
     }
 }
