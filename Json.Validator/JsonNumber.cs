@@ -13,23 +13,12 @@ namespace Json
             }
 
             bool isAcceptedChar = (IsChar(input) && IsValidExponent(input)) || !IsChar(input);
-            return isAcceptedChar && !StartsWithZero(input) && HasOnlyOneFractionalPart(input);
+            return isAcceptedChar && !StartsWithLeadingZero(input) && HasOnlyOneFractionalPart(input);
         }
 
-        private static bool StartsWithZero(string input)
+        private static bool StartsWithLeadingZero(string input)
         {
-            if (input.Length > 1 && input[0] == '0' && input[1] == '.')
-            {
-                return false;
-            }
-            else if (input.Length > 1 && input[0] == '0')
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return input.Length > 1 && input[0] == '0' && input[1] != '.';
         }
 
         private static bool IsChar(string input)
