@@ -12,7 +12,7 @@ namespace Json
                 return false;
             }
 
-            bool isAcceptedChar = (!HasOnlyAllowedChars(input) && IsValidExponent(input)) || HasOnlyAllowedChars(input);
+            bool isAcceptedChar = (!HasValidSignAndOnlyDigits(input) && IsValidExponent(input)) || HasValidSignAndOnlyDigits(input);
             return isAcceptedChar && !StartsWithLeadingZero(input) && HasMaxOneFractionalPart(input);
         }
 
@@ -31,7 +31,7 @@ namespace Json
                 return false;
             }
 
-            return IsExponentialComplete(input.Substring(index + 1)) && HasOnlyAllowedChars(input.Substring(index + 1));
+            return IsExponentialComplete(input.Substring(index + 1)) && HasValidSignAndOnlyDigits(input.Substring(index + 1));
         }
 
         private static bool IsExponentialComplete(string exponentContent)
@@ -39,13 +39,17 @@ namespace Json
             return exponentContent.Length != 0 && (exponentContent.Length != 1 || (!exponentContent[0].Equals('+') && !exponentContent[0].Equals('-')));
         }
 
-        private static bool HasOnlyAllowedChars(string toVerify)
+        private static bool IsValidSign(char toVerify)
         {
             const string allowed = "+-.";
+            return allowed.Contains(toVerify);
+        }
 
+        private static bool HasValidSignAndOnlyDigits(string toVerify)
+        {
             for (int i = 0; i < toVerify.Length; i++)
             {
-                if (!IsDigit(toVerify[i]) && !allowed.Contains(toVerify[i]))
+                if (!IsDigit(toVerify[i]) && !IsValidSign(toVerify[i]))
                 {
                     return false;
                 }
