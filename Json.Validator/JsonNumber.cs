@@ -7,13 +7,20 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input) || StartsWithLeadingZero(input) || !HasMaxOneFractionalPart(input))
             {
                 return false;
             }
 
-            bool isAcceptedChar = (!HasValidSignAndOnlyDigits(input) && IsValidExponent(input)) || HasValidSignAndOnlyDigits(input);
-            return isAcceptedChar && !StartsWithLeadingZero(input) && HasMaxOneFractionalPart(input);
+            // Has fractional part
+            if (input.Contains('.'))
+            {
+                int index = input.IndexOf('.');
+                return IsIntegerPartValid(input.Substring(0, index)) && IsFractionalPartValid(input.Substring(index + 1));
+            }
+
+            // Does not have fractional part
+            return IsNonFractionalNumberValid(input);
         }
 
         private static bool StartsWithLeadingZero(string input)
@@ -23,15 +30,7 @@ namespace Json
 
         private static bool IsValidExponent(string input)
         {
-            string toLower = input.ToLower();
-            var count = toLower.Count(c => c == 'e');
-            int index = input.ToLower().IndexOf('e');
-            if (count != 1 || index < input.IndexOf('.') || toLower.Substring(index).Length == 1)
-            {
-                return false;
-            }
-
-            return IsExponentialComplete(input.Substring(index + 1)) && HasValidSignAndOnlyDigits(input.Substring(index + 1));
+            return IsExponentialComplete(input) && HasValidSignAndOnlyDigits(input);
         }
 
         private static bool IsExponentialComplete(string exponentContent)
@@ -39,17 +38,34 @@ namespace Json
             return exponentContent.Length != 0 && (exponentContent.Length != 1 || (!exponentContent[0].Equals('+') && !exponentContent[0].Equals('-')));
         }
 
-        private static bool IsValidSign(char toVerify)
+        private static bool HasPlusAndMinusAtCorrectPosition(string toVerify)
         {
-            const string allowed = "+-.";
-            return allowed.Contains(toVerify);
+            return toVerify.IndexOf('+') == 0 || toVerify.IndexOf('-') == 0;
+        }
+
+        private static bool HasPlusOrMinus(string toVerify)
+        {
+            var countPluses = toVerify.Count(c => c == '+');
+            var countMinuses = toVerify.Count(c => c == '-');
+
+            return countPluses + countMinuses != 0;
         }
 
         private static bool HasValidSignAndOnlyDigits(string toVerify)
         {
-            for (int i = 0; i < toVerify.Length; i++)
+            if (toVerify.Length > 1)
             {
-                if (!IsDigit(toVerify[i]) && !IsValidSign(toVerify[i]))
+                return ((HasPlusAndMinusAtCorrectPosition(toVerify) || !HasPlusOrMinus(toVerify)) && IsDigit(toVerify.Substring(1))) || IsDigit(toVerify);
+            }
+
+            return IsDigit(toVerify);
+        }
+
+        private static bool IsDigit(string input)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] < '0' || input[i] > '9')
                 {
                     return false;
                 }
@@ -58,9 +74,24 @@ namespace Json
             return true;
         }
 
-        private static bool IsNullOrEmpty(string input)
+        private static bool IsIntegerPartValid(string input)
         {
-            return string.IsNullOrEmpty(input);
+            return HasValidSignAndOnlyDigits(input);
+        }
+
+        private static bool IsFractionalPartValid(string input)
+        {
+            string toLower = input.ToLower();
+            if (toLower.Contains('e') && HasMaxOneExponent(toLower))
+            {
+                int index = toLower.IndexOf('e');
+                if (index != 0)
+                {
+                    return IsDigit(input.Substring(0, index)) && IsValidExponent(input.Substring(index + 1));
+                }
+            }
+
+            return IsDigit(input);
         }
 
         private static bool HasMaxOneFractionalPart(string input)
@@ -71,9 +102,26 @@ namespace Json
             return count <= 1 && input[length - 1] != '.';
         }
 
-        private static bool IsDigit(char charToVerify)
+        private static bool IsNonFractionalNumberValid(string input)
         {
-            return charToVerify >= '0' && charToVerify <= '9';
+            string toLower = input.ToLower();
+            if (toLower.Contains('e') && HasMaxOneExponent(toLower))
+            {
+                int index = toLower.IndexOf('e');
+                if (index != 0)
+                {
+                    return HasValidSignAndOnlyDigits(toLower.Substring(0, index)) && IsValidExponent(toLower.Substring(index + 1));
+                }
+            }
+
+            return HasValidSignAndOnlyDigits(input);
+        }
+
+        private static bool HasMaxOneExponent(string input)
+        {
+            var count = input.Count(c => c == 'e');
+
+            return count <= 1;
         }
     }
 }
