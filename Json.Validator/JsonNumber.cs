@@ -123,5 +123,4 @@ namespace Json
 
             return count <= 1;
         }
-    }
 }
