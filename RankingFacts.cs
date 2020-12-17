@@ -53,11 +53,11 @@ namespace Football
             FootballTeam teamFour = new FootballTeam("CFR Cluj");
             FootballTeam teamFive = new FootballTeam("Viitorul");
 
-            teamOne.Points = 20;
-            teamTwo.Points = 10;
-            teamThree.Points = 50;
-            teamFour.Points = 40;
-            teamFive.Points = 30;
+            teamOne.IncreasePoints(20);
+            teamTwo.IncreasePoints(10);
+            teamThree.IncreasePoints(50);
+            teamFour.IncreasePoints(40);
+            teamFive.IncreasePoints(30);
 
             List<FootballTeam> teams = new List<FootballTeam>();
 
@@ -81,11 +81,11 @@ namespace Football
             FootballTeam teamFour = new FootballTeam("CFR Cluj");
             FootballTeam teamFive = new FootballTeam("Viitorul");
 
-            teamOne.Points = 20;
-            teamTwo.Points = 10;
-            teamThree.Points = 50;
-            teamFour.Points = 40;
-            teamFive.Points = 30;
+            teamOne.IncreasePoints(20);
+            teamTwo.IncreasePoints(10);
+            teamThree.IncreasePoints(50);
+            teamFour.IncreasePoints(40);
+            teamFive.IncreasePoints(30);
 
             List<FootballTeam> teams = new List<FootballTeam>();
 
@@ -109,11 +109,11 @@ namespace Football
             FootballTeam teamFour = new FootballTeam("CFR Cluj");
             FootballTeam teamFive = new FootballTeam("Viitorul");
 
-            teamOne.Points = 1;
-            teamTwo.Points = 2;
-            teamThree.Points = 3;
-            teamFour.Points = 4;
-            teamFive.Points = 5;
+            teamOne.IncreasePoints(10);
+            teamTwo.IncreasePoints(10);
+            teamThree.IncreasePoints(50);
+            teamFour.IncreasePoints(40);
+            teamFive.IncreasePoints(30);
 
             MatchResult matchResult = new MatchResult(5, 1);
             FootballMatch footballMatch = new FootballMatch(teamOne, teamTwo, matchResult);
@@ -129,7 +129,7 @@ namespace Football
 
             ranking.UpdateRanking(footballMatch);
 
-            Assert.Equal("4", ranking.GetRankingOfGivenTeam(teamOne));
+            Assert.Equal("3", ranking.GetRankingOfGivenTeam(teamOne));
         }
 
     }

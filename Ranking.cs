@@ -20,7 +20,7 @@ namespace Football
             if (!footballTeam.IsNameNullOrEmpty(footballTeam.Name))
             {
                 teams.Add(footballTeam);
-                teams = SortTeamsByPoints(teams);
+                teams = this.ChangeRanking(teams);
                 return "Added with success!";
             }
 
@@ -46,38 +46,44 @@ namespace Football
         }
 
         public void UpdateRanking(FootballMatch footballMatch)
-        {
-            foreach (FootballTeam team in teams)
+        {                
+            FootballTeam homeTeam = teams.Find(x => x.Name.Equals(footballMatch.HomeTeam.Name));
+            FootballTeam awayTeam = teams.Find(x => x.Name.Equals(footballMatch.AwayTeam.Name));
+
+            if (footballMatch.MatchResult.HomeTeamResult > footballMatch.MatchResult.HomeTeamResult)
             {
-                if (team.Name.Equals(footballMatch.HomeTeam.Name))
+            homeTeam.IncreasePoints(3);
+            }
+            else if (footballMatch.MatchResult.HomeTeamResult > footballMatch.MatchResult.HomeTeamResult)
+            {
+                awayTeam.IncreasePoints(3);
+            }
+            else
+            {
+                homeTeam.IncreasePoints(1);
+                awayTeam.IncreasePoints(1);
+            }
+
+            this.ChangeRanking(teams);
+        }
+
+        public List<FootballTeam> ChangeRanking(List<FootballTeam> teams)
+        {
+            for (int i = 0; i < teams.Count - 1; i++)
+            {
+                for (int j = i + 1; j < teams.Count; j++)
                 {
-                    team.Points += footballMatch.MatchResult.HomeTeamResult;
-                }
-                else if (team.Name.Equals(footballMatch.AwayTeam.Name))
-                {
-                    team.Points += footballMatch.MatchResult.AwayTeamResult;
-                }
-                else
-                {
-                    Console.WriteLine("Teams are not in this competition");
+                    if (!teams[i].CompareTo(teams[j]))
+                    {
+                        FootballTeam aux = teams[i];
+                        teams[i] = teams[j];
+                        teams[j] = aux;
+                    }
                 }
             }
 
-            this.teams = SortTeamsByPoints(teams);
+            return teams;
         }
 
-        public List<FootballTeam> Teams
-        {
-            get
-            {
-                return Teams;
-            }
-        }
-
-        public List<FootballTeam> SortTeamsByPoints(List<FootballTeam> footballTeams)
-        {
-            List<FootballTeam> sortedList = footballTeams.OrderBy(o => o.Points).ToList();
-            return sortedList;
-        }
     }
 }

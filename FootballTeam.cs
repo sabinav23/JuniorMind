@@ -29,18 +29,15 @@ namespace Football
             }
         }
 
-        public int Points
+        public bool CompareTo(FootballTeam teamToCompareTo)
         {
-            get
-            {
-                return points;
-            }
-            set
-            {
-                this.points = value;
-            }
+            return this.points > teamToCompareTo.points;
         }
 
+        public void IncreasePoints(int points)
+        {
+            this.points += points;
+        }
 
 
 
