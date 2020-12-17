@@ -27,9 +27,13 @@ namespace Football
             return "Not added!";
         }
 
-        public FootballTeam GetTeamAtGivenPosition(int position)
+        public string GetTeamAtGivenPosition(int position)
         {
-            return teams[position];
+            if (position < teams.Count)
+            {
+                return teams[position].ToString();
+            }
+            return "No team for the given position!";
         }
 
         public string GetRankingOfGivenTeam(FootballTeam footballTeam)

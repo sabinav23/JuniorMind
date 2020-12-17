@@ -68,11 +68,39 @@ namespace Football
             ranking.AddTeamToRanking(teamFour);
             ranking.AddTeamToRanking(teamFive);
 
-            Assert.Equal(teamFive, ranking.GetTeamAtGivenPosition(2));
+            Assert.Equal(teamFive.ToString(), ranking.GetTeamAtGivenPosition(2));
         }
 
         [Fact]
-        public void ReturnsPositionOfG()
+        public void DoesNotReturnPositionIfThereIsNoTeamAtTheGivenPosition()
+        {
+
+            FootballTeam teamOne = new FootballTeam("Steaua");
+            FootballTeam teamTwo = new FootballTeam("Dinamo");
+            FootballTeam teamThree = new FootballTeam("Nu mai stiu altele");
+            FootballTeam teamFour = new FootballTeam("CFR Cluj");
+            FootballTeam teamFive = new FootballTeam("Viitorul");
+
+            teamOne.IncreasePoints(20);
+            teamTwo.IncreasePoints(10);
+            teamThree.IncreasePoints(50);
+            teamFour.IncreasePoints(40);
+            teamFive.IncreasePoints(30);
+
+            List<FootballTeam> teams = new List<FootballTeam>();
+
+            Ranking ranking = new Ranking(teams);
+            ranking.AddTeamToRanking(teamOne);
+            ranking.AddTeamToRanking(teamTwo);
+            ranking.AddTeamToRanking(teamThree);
+            ranking.AddTeamToRanking(teamFour);
+            ranking.AddTeamToRanking(teamFive);
+
+            Assert.Equal("No team for the given position!", ranking.GetTeamAtGivenPosition(5));
+        }
+
+        [Fact]
+        public void ReturnsPositionOfGivenTeam()
         {
 
             FootballTeam teamOne = new FootballTeam("Steaua");
@@ -129,8 +157,27 @@ namespace Football
 
             ranking.UpdateRanking(footballMatch);
 
-            Assert.Equal("3", ranking.GetRankingOfGivenTeam(teamOne));
+            Assert.Equal("4", ranking.GetRankingOfGivenTeam(teamOne));
         }
+
+        [Fact]
+        public void CanNotReturnPositionOFTeamNotInRanking()
+        {
+
+            FootballTeam teamOne = new FootballTeam("Steaua");
+            FootballTeam teamTwo = new FootballTeam("Dinamo");
+            FootballTeam teamThree = new FootballTeam("CFR");
+            List<FootballTeam> teams = new List<FootballTeam>();
+            teams.Add(teamOne);
+            teams.Add(teamTwo);
+
+            Ranking ranking = new Ranking(teams);
+
+            Assert.Equal("Your favorite team is not that cool!", ranking.GetRankingOfGivenTeam(teamThree));
+        }
+
+
+
 
     }
 }
