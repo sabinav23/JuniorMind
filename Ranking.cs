@@ -50,24 +50,9 @@ namespace Football
         }
 
         public void UpdateRanking(FootballMatch footballMatch)
-        {                
-            FootballTeam homeTeam = teams.Find(x => x.Name.Equals(footballMatch.HomeTeam.Name));
-            FootballTeam awayTeam = teams.Find(x => x.Name.Equals(footballMatch.AwayTeam.Name));
+        {
 
-            if (footballMatch.MatchResult.HomeTeamResult > footballMatch.MatchResult.HomeTeamResult)
-            {
-            homeTeam.IncreasePoints(3);
-            }
-            else if (footballMatch.MatchResult.HomeTeamResult > footballMatch.MatchResult.HomeTeamResult)
-            {
-                awayTeam.IncreasePoints(3);
-            }
-            else
-            {
-                homeTeam.IncreasePoints(1);
-                awayTeam.IncreasePoints(1);
-            }
-
+            footballMatch.FindWinner();
             this.ChangeRanking(teams);
         }
 
