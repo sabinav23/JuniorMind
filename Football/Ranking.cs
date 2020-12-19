@@ -7,72 +7,66 @@ namespace Football
 {
     public class Ranking
     {
-        private List<FootballTeam> teams = new List<FootballTeam>();
+        private FootballTeam[] teams = new FootballTeam[0];
 
-        public Ranking(List<FootballTeam> teams)
+        public void AddTeam(FootballTeam footballTeam)
         {
-            this.teams = teams;
+            Array.Resize(ref teams, teams.Length + 1);
+            teams[teams.Length - 1] = footballTeam;
+            ChangeRanking();
+
         }
 
-
-        public String AddTeamToRanking(FootballTeam footballTeam)
+        public FootballTeam GetTeamAtGivenPosition(int position)
         {
-            if (!footballTeam.IsNameNullOrEmpty(footballTeam.Name))
-            {
-                teams.Add(footballTeam);
-                teams = this.ChangeRanking(teams);
-                return "Added with success!";
-            }
-
-            return "Not added!";
+            return teams[position];
         }
 
-        public string GetTeamAtGivenPosition(int position)
+        public int GetRanking(FootballTeam footballTeam)
         {
-            if (position < teams.Count)
+            for (int i = 0; i < teams.Length; i++)
             {
-                return teams[position].ToString();
-            }
-            return "No team for the given position!";
-        }
-
-        public string GetRankingOfGivenTeam(FootballTeam footballTeam)
-        {
-            for (int i = 0; i < teams.Count; i++)
-            {
-                if (teams[i].Name.Equals(footballTeam.Name))
+                if (teams[i].Equals(footballTeam))
                 {
-                    return i.ToString();
+                    return i;
                 }
             }
 
-            return "Your favorite team is not that cool!";
+            return -1;
         }
 
         public void UpdateRanking(FootballMatch footballMatch)
         {
 
-            footballMatch.FindWinner();
-            this.ChangeRanking(teams);
+            footballMatch.UpdatePoints();
+            ChangeRanking();
         }
 
-        public List<FootballTeam> ChangeRanking(List<FootballTeam> teams)
+        private void ChangeRanking()
         {
-            for (int i = 0; i < teams.Count - 1; i++)
+            for (int i = 0; i < teams.Length - 1; i++)
             {
-                for (int j = i + 1; j < teams.Count; j++)
+                bool swaped = false;
+                for (int j = 0; j < teams.Length - i - 1; j++)
                 {
-                    if (!teams[i].CompareTo(teams[j]))
+                    if (!teams[j].CompareTo(teams[j + 1]))
                     {
-                        FootballTeam aux = teams[i];
-                        teams[i] = teams[j];
-                        teams[j] = aux;
+                        Swap(teams, j, j + 1);
+                        swaped = true;
                     }
                 }
+                if (!swaped)
+                {
+                    return;
+                }
             }
-
-            return teams;
         }
 
+        private void Swap(FootballTeam[] teams, int i, int j)
+        {
+            FootballTeam aux = teams[i];
+            teams[i] = teams[j];
+            teams[j] = aux;
+        }
     }
 }

@@ -15,29 +15,16 @@ namespace Football
             this.awayTeamResult = awayTeamResult;;
         }
 
-        public int HomeTeamResult
+        public bool DidHomeTeamWin()
         {
-            get 
-            {
-                return homeTeamResult;
-            }
-            set
-            {
-                this.homeTeamResult = value;
-            }
+            return homeTeamResult > awayTeamResult;
         }
 
-        public int AwayTeamResult
+        public bool WasDraw()
         {
-            get
-            {
-                return awayTeamResult;
-            }
-            set
-            {
-                this.awayTeamResult = value;
-            }
+            return homeTeamResult == awayTeamResult;
         }
+
 
     }
 }

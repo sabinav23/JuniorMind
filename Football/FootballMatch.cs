@@ -18,56 +18,21 @@ namespace Match
             this.matchResult = matchResult;
         }
 
-        public FootballTeam HomeTeam
-        {
-            get
-            {
-                return homeTeam;
-            }
-            set
-            {
-                this.homeTeam = value;
-            }
-        }
 
-        public FootballTeam AwayTeam
-        {
-            get
-            {
-                return awayTeam;
-            }
-            set
-            {
-                this.awayTeam = value;
-            }
-        }
-
-        public MatchResult MatchResult
-        {
-            get
-            {
-                return matchResult;
-            }
-            set
-            {
-                this.matchResult = value;
-            }
-        }
-
-        public void FindWinner()
+        public void UpdatePoints()
         {
             const int pointsVictory = 3;
             const int pointsEqual = 1;
-            if(this.MatchResult.HomeTeamResult > this.MatchResult.AwayTeamResult)
+            if(matchResult.DidHomeTeamWin())
             {
-                this.HomeTeam.IncreasePoints(pointsVictory);
+                homeTeam.IncreasePoints(pointsVictory);
             }
-            if(this.MatchResult.HomeTeamResult == this.MatchResult.AwayTeamResult)
+            if(matchResult.WasDraw())
             {
-                this.HomeTeam.IncreasePoints(pointsEqual);
-                this.AwayTeam.IncreasePoints(pointsEqual);
+                homeTeam.IncreasePoints(pointsEqual);
+                awayTeam.IncreasePoints(pointsEqual);
             }
-            this.AwayTeam.IncreasePoints(pointsVictory);
+            awayTeam.IncreasePoints(pointsVictory);
         }
     }
 }

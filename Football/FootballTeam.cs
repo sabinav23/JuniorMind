@@ -15,20 +15,6 @@ namespace Football
             this.name = name;
         }
 
-        public bool IsNameNullOrEmpty(string teamName)
-        {
-            return string.IsNullOrEmpty(teamName);
-        }
-
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-        }
-
         public bool CompareTo(FootballTeam teamToCompareTo)
         {
             return this.points > teamToCompareTo.points;
@@ -38,8 +24,6 @@ namespace Football
         {
             this.points += points;
         }
-
-
 
     }
 }

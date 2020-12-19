@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Football
 {
-    class FootballMatchFactscs
+    public class FootballMatchFactscs
     {
     }
 }
