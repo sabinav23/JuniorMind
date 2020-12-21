@@ -4,15 +4,13 @@ using System.Text;
 
 namespace JSONoop
 {
-    public class Range : IPattern
+    class Character : IPattern
     {
-        private readonly char start;
-        private readonly char end;
+        private readonly char chr;
 
-        public Range(char start, char end)
+        public Character(char chr)
         {
-            this.start = start;
-            this.end = end;
+            this.chr = chr;
         }
 
         public bool Match(string text)
@@ -22,7 +20,7 @@ namespace JSONoop
                 return false;
             }
 
-            return text[0] >= start &&  text[0] <= end;
+            return text[0] == chr;
         }
     }
 }
