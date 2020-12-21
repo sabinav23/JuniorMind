@@ -1,4 +1,0 @@
-C:\Users\Bini\Desktop\juniorMIND\Footbal\obj\Debug\netcoreapp3.1\Footbal.csprojAssemblyReference.cache
-C:\Users\Bini\Desktop\juniorMIND\Footbal\obj\Debug\netcoreapp3.1\Footbal.AssemblyInfoInputs.cache
-C:\Users\Bini\Desktop\juniorMIND\Footbal\obj\Debug\netcoreapp3.1\Footbal.AssemblyInfo.cs
-C:\Users\Bini\Desktop\juniorMIND\Footbal\obj\Debug\netcoreapp3.1\Footbal.csproj.CoreCompileInputs.cache
