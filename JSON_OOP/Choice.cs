@@ -13,22 +13,17 @@ namespace JSONoop
             this.patterns = patterns;
         }
 
-        public bool Match(string text)
+        public IMatch Match(string text)
         {
-            if (string.IsNullOrEmpty(text))
+            foreach (IPattern pattern in patterns)
             {
-                return false;
-            }
-
-            for (int i = 0; i < patterns.Length; i++)
-            {
-                if (patterns[i].Match(text))
-                {
-                    return true;
+                IMatch match = pattern.Match(text);
+                if(match.Success().Equals(true))
+                {             
+                    return new Match(match.RemainingText(), true);
                 }
             }
-
-            return false;
+            return new Match(null, false);
         }
     }
 }

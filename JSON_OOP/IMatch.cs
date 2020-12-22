@@ -4,8 +4,9 @@ using System.Text;
 
 namespace JSONoop
 {
-    interface IPattern
+    public interface IMatch
     {
-        IMatch Match(string text);
+        bool Success();
+        string RemainingText();
     }
 }

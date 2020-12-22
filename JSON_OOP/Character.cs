@@ -13,14 +13,15 @@ namespace JSONoop
             this.chr = chr;
         }
 
-        public bool Match(string text)
+        public IMatch Match(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
-                return false;
+                return new Match(null, false);
             }
 
-            return text[0] == chr;
+            bool isMatch = text[0].Equals(chr);
+            return new Match(text.Substring(1), isMatch);
         }
     }
 }
