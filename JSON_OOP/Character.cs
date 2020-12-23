@@ -15,13 +15,9 @@ namespace JSONoop
 
         public IMatch Match(string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return new Match(null, false);
-            }
-
-            bool isMatch = text[0].Equals(chr);
-            return new Match(text.Substring(1), isMatch);
+            return !string.IsNullOrEmpty(text) && text[0] == chr
+                ? new Match(text.Substring(1), true)
+                : new Match(text, false);
         }
     }
 }

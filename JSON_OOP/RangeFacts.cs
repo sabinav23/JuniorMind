@@ -9,53 +9,68 @@ namespace JSONoop
     public class RangeFacts
     {
         [Fact]
-        public void ReturnsTrueWhenInValidRange()
+        public void VerifyFunctionReturnsRemainingTextAndTrueWhenInValidRange()
         {
             Range range1 = new Range('a', 'f');
 
             string test = "abc";
 
-            Assert.True(range1.Match(test));
-        }
+            Match match = new Match("bc", true);
 
+            Assert.True(match.Success().Equals((range1.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
+        }
+        
         [Fact]
-        public void ReturnsTrueWhenCharacterIsBoundary()
+        public void VerifyFunctionReturnsRemainingTextAndTrueWhenCharacterIsBoundary()
         {
             Range range1 = new Range('a', 'f');
 
             string test = "fda";
 
-            Assert.True(range1.Match(test));
+            Match match = new Match("da", true);
+
+            Assert.True(match.Success().Equals((range1.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
         }
 
         [Fact]
-        public void ReturnsFalseWhenExceedingBoundary()
+        public void VerifyFunctionReturnsFullTextAndFalseWhenExceedingBoundary()
         {
             Range range1 = new Range('a', 'f');
 
             string test = "1da";
 
-            Assert.False(range1.Match(test));
+            Match match = new Match("1da", false);
+
+            Assert.True(match.Success().Equals((range1.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
         }
 
         [Fact]
-        public void ReturnsFalseWhenNull()
+        public void VerifyFunctionReturnsFalseWhenNull()
         {
             Range range1 = new Range('a', 'f');
 
             string test = null;
 
-            Assert.False(range1.Match(test));
+            Match match = new Match(test, false);
+
+            Assert.True(match.Success() == range1.Match(test).Success());
+            Assert.True(match.RemainingText() == range1.Match(test).RemainingText());
         }
 
         [Fact]
-        public void ReturnsFalseWhenEmpty()
+        public void VerifyFunctionReturnsFalseWhenEmpty()
         {
             Range range1 = new Range('a', 'f');
 
             string test = "";
 
-            Assert.False(range1.Match(test));
+            Match match = new Match("", false);
+
+            Assert.True(match.Success().Equals((range1.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
         }
     }
 }

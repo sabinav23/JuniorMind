@@ -8,28 +8,35 @@ namespace JSONoop
     public class CharacterFacts
     {
         [Fact]
-        public void ReturnsTrueWhenMatched()
+        public void VerifyFunctionReturnsRemainingTextAndTrueWhenMatched()
         {
             Character chr = new Character('0');
+            Match match = new Match("", true);
 
-            Assert.True(chr.Match("0"));
+            Assert.True(match.Success().Equals((chr.Match("0").Success())));
+            Assert.True(match.RemainingText().Equals((chr.Match("0").RemainingText())));
         }
-
+        
         [Fact]
-        public void ReturnsFalseWhenNull()
+        public void VerifyFunctionReturnsTextAndFalsWhenNull()
         {
             Character chr = new Character('0');
 
-            Assert.False(chr.Match(null));
-        }
+            Match match = new Match(null, false);
 
+            Assert.True(match.Success().Equals(chr.Match(null).Success()));
+            Assert.True(match.RemainingText() == chr.Match(null).RemainingText());
+        }
+        
         [Fact]
-        public void ReturnsFalseWhenEmpty()
+        public void VerifyFunctionReturnsTextAndFalseWhenEmpty()
         {
             Character chr = new Character('0');
 
-            Assert.False(chr.Match(""));
-        }
+            Match match = new Match("", false);
 
+            Assert.True(match.Success().Equals((chr.Match("").Success())));
+            Assert.True(match.RemainingText().Equals((chr.Match("").RemainingText())));
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace JSONoop
                     return new Match(match.RemainingText(), true);
                 }
             }
-            return new Match(null, false);
+            return new Match(text, false);
         }
     }
 }
