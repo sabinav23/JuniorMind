@@ -19,7 +19,7 @@ namespace JSONoop
             foreach (IPattern pattern in patterns)
             {
                 match = pattern.Match(match.RemainingText());
-                if (!match.Success().Equals(true))
+                if (!match.Success())
                 {
                     return new Match(text, false);
                 }
