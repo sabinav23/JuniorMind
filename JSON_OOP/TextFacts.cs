@@ -25,9 +25,9 @@ namespace JSONoop
         {
             var text = new Text("true");
 
-            string test = "trueX";
+            string test = "trueXE";
 
-            Match match = new Match("X", true);
+            Match match = new Match("XE", true);
 
             Assert.True(match.Success().Equals((text.Match(test).Success())));
             Assert.True(match.RemainingText().Equals((text.Match(test).RemainingText())));
@@ -42,6 +42,19 @@ namespace JSONoop
             string test = "false";
 
             Match match = new Match("false", false);
+
+            Assert.True(match.Success().Equals((text.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((text.Match(test).RemainingText())));
+        }
+
+        [Fact]
+        public void VerifyFunctionReturnsFullTextAndFalseWhenTextDoesNotMatchFullPrefix()
+        {
+            var text = new Text("true");
+
+            string test = "truVE";
+
+            Match match = new Match("truVE", false);
 
             Assert.True(match.Success().Equals((text.Match(test).Success())));
             Assert.True(match.RemainingText().Equals((text.Match(test).RemainingText())));
