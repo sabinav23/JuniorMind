@@ -15,12 +15,12 @@ namespace JSONoop
         public IMatch Match(string text)
         {
             IMatch match = new Match(text, true);
-            while (pattern.Match(match.RemainingText()).Success())
+            while (match.Success())
             {
-                match = new Match(pattern.Match(match.RemainingText()).RemainingText(), true);
+                match = pattern.Match(match.RemainingText());
             }
 
-            return match;
+            return new Match(match.RemainingText(), true);
         }
     }
 }
