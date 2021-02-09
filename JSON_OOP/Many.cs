@@ -7,6 +7,7 @@ namespace JSONoop
     class Many : IPattern
     {
         private IPattern pattern;
+
         public Many(IPattern pattern)
         {
             this.pattern = pattern;
@@ -15,6 +16,7 @@ namespace JSONoop
         public IMatch Match(string text)
         {
             IMatch match = new Match(text, true);
+
             while (match.Success())
             {
                 match = pattern.Match(match.RemainingText());

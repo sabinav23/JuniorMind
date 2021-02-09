@@ -268,5 +268,26 @@ namespace JSONoop
             Assert.True(match.Success() == hexSeq.Match(text).Success());
             Assert.True(match.RemainingText() == hexSeq.Match(text).RemainingText());
         }
+
+        [Fact]
+        public void VerifyForShortText()
+        {
+            var ab = new Sequence(
+                new Character('a'),
+                new Character('b')
+            );
+
+            var abc = new Sequence(
+                ab,
+                new Character('c')
+            );
+
+            string text = "ab";
+
+            Match match = new Match("ab", false);
+
+            Assert.True(match.Success().Equals((abc.Match(text).Success())));
+            Assert.True(match.RemainingText().Equals((abc.Match(text).RemainingText())));
+        }
     }
 }

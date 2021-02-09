@@ -72,5 +72,19 @@ namespace JSONoop
             Assert.True(match.Success().Equals((range1.Match(test).Success())));
             Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
         }
+
+        [Fact]
+        public void ExceptedChar()
+        {
+            Range range1 = new Range('a', 'f');
+
+            string test = "\\dc";
+
+            Match match = new Match("\\dc", false);
+
+            Assert.True(match.Success().Equals((range1.Match(test).Success())));
+            Assert.True(match.RemainingText().Equals((range1.Match(test).RemainingText())));
+        }
+
     }
 }

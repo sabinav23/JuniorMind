@@ -12,7 +12,7 @@ namespace JSONoop
 
         public Match(string remainingText, bool success)
         {
-            this.remainingText = remainingText;
+             this.remainingText = remainingText;
             this.success = success;
         }
         public string RemainingText()
