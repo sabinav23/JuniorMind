@@ -6,11 +6,17 @@ namespace JSONoop
 {
     class Choice : IPattern
     {
-        readonly IPattern[] patterns;
+        IPattern[] patterns;
 
         public Choice(params IPattern[] patterns)
         {
             this.patterns = patterns;
+        }
+
+        public void Add(IPattern pattern)
+        {
+            Array.Resize(ref patterns, patterns.Length  + 1);
+            patterns[patterns.Length - 1] = pattern;
         }
 
         public IMatch Match(string text)

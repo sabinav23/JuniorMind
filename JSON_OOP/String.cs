@@ -10,7 +10,7 @@ namespace JSONoop
         private readonly Range interval;
         private readonly Choice character;
         private readonly Optional characters;
-        private readonly List stringPattern;
+        private readonly Sequence stringPattern;
         private readonly Range digit;
         private readonly Character quotesChar;
         private readonly Choice hex;
@@ -25,7 +25,7 @@ namespace JSONoop
             interval = new Range((char)32, char.MaxValue, "\\\"");
             character = new Choice(new Sequence(new Character('\\'), escape), interval);
             characters = new Optional(new Many(character));
-            stringPattern = new List(quotesChar, characters);
+            stringPattern = new Sequence(quotesChar, characters, quotesChar);
             
 
             pattern = stringPattern;

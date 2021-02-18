@@ -173,5 +173,23 @@ namespace JSONoop
             Assert.True(match.RemainingText() == hex.Match(text).RemainingText());
         }
 
+        [Fact]
+        public void AddNewPattern()
+        {
+            var test = new Choice(
+                new Range('1', '9')
+            );
+
+            var charPattern = new Character('a');
+            test.Add(charPattern);
+
+            string text = "a";
+
+            Match match = new Match("", true);
+
+            Assert.True(match.Success().Equals((test.Match(text).Success())));
+            Assert.True(match.RemainingText().Equals((test.Match(text).RemainingText())));
+        }
+
     }
 }
