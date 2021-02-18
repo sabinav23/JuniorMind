@@ -43,7 +43,7 @@ namespace JSONoop
         {
             var a = new Value();
 
-            string test = " [1] ";
+            string test = " [1, 2, 3, 4, 5] ";
 
             Match match = new Match("", true);
 
@@ -88,7 +88,7 @@ namespace JSONoop
         {
             var a = new Value();
 
-            string test = " [] ";
+            string test = " [ ] ";
 
             Match match = new Match("", true);
 
