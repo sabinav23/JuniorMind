@@ -119,9 +119,9 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            arr.Insert(5, 10);
+            arr.Insert(2, 10);
 
-            Assert.Equal(10, arr.Element(5));
+            Assert.Equal(10, arr.Element(2));
         }
 
         [Fact]

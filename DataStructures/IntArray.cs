@@ -9,19 +9,19 @@ namespace IntArrayProject
 
         public IntArray()
         {
-            this.array = new int[1];
+            this.array = new int[0];
         }
 
         public void Add(int element)
         {
             int length = array.Length;
             Array.Resize(ref array, length + 1);
-            array[length-1] = element;
+            array[array.Length - 1] = element;
         }
 
         public int Count()
         {
-            return array.Length - 1;
+            return array.Length;
         }
 
         public int Element(int index)
@@ -40,38 +40,22 @@ namespace IntArrayProject
             {
                 array[index] = element;
             }
-
-            Console.WriteLine("No element at given index");
         }
 
         public bool Contains(int element)
         {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == element)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ExistsInArray(element) != -1 ? true : false;
         }
 
         public int IndexOf(int element)
         {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == element)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
+            return ExistsInArray(element);
         }
 
         public void Insert(int index, int element)
         {
+
+            MoveElements(index, "dr");
             array[index] = element;
         }
 
@@ -85,35 +69,50 @@ namespace IntArrayProject
 
         public void Remove(int element)
         {
-            int position = -1;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == element)
-                {
-                    position = i;
-                    break;
-                }
-            }
+            int position = ExistsInArray(element);
             if (position != -1)
             {
-                for (int i = position; i < array.Length - 1; i++)
-                {
-                    array[i] = array[i + 1];
-                }
+                MoveElements(position, "st");
             }
 
         }
 
         public void RemoveAt(int index)
         {
-            if (index < array.Length)
+            MoveElements(index, "st");
+        }
+
+        private int ExistsInArray(int element)
+        {
+            for (int i = 0; i < array.Length; i++)
             {
-                for (int i = index; i < array.Length - 1; i++)
+                if (array[i] == element)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private void MoveElements(int position, string direction)
+        {
+            if (direction.Equals("st"))
+            {
+                for (int i = position; i < array.Length - 1; i++)
                 {
                     array[i] = array[i + 1];
                 }
             }
+            else
+            {
+                Array.Resize(ref array, array.Length + 1);
+                for (int i = array.Length - 1; i >= position; i--) 
+                {
+                    array[i] = array[i - 1];
+                }
+            }
         }
     }
-   
+
 }
