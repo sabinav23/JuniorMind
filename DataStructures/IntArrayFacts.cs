@@ -127,13 +127,13 @@ namespace IntArrayProject
             arr.Add(5);
             arr.Add(6);
             arr.Add(7);
-            arr.Add(8);
             arr.Add(9);
+       
 
-            arr.Insert(2, 10);
+            arr.Insert(3, 10);
 
-            Assert.Equal(10, arr.Element(2));
-            Assert.Equal(6, arr.Count());
+            Assert.Equal(9, arr.Element(4));
+            Assert.Equal(5, arr.Count());
         }
 
         [Fact]

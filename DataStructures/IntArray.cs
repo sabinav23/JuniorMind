@@ -15,10 +15,7 @@ namespace IntArrayProject
 
         public void Add(int element)
         {
-            if (count == array.Length)
-            {
-                Array.Resize(ref array, array.Length * 2);
-            }
+            EnsureCapacity();
             array[count] = element;
             count++;
         }
@@ -58,9 +55,9 @@ namespace IntArrayProject
 
         public void Insert(int index, int element)
         {
-
+            EnsureCapacity();
             MoveElementsToTheRight(index);
-            array[index] = element;
+            SetElement(index, element);
             count++;
         }
 
@@ -75,8 +72,7 @@ namespace IntArrayProject
             int position = IndexOf(element);
             if (position != -1)
             {
-                MoveElementsToTheLeft(position);
-                count--;
+                RemoveAt(position);
             }
 
         }
@@ -100,6 +96,14 @@ namespace IntArrayProject
             for (int i = array.Length - 1; i >= position; i--)
             {
                 array[i] = array[i - 1];
+            }
+        }
+
+        public void EnsureCapacity()
+        {
+            if (count == array.Length)
+            {
+                Array.Resize(ref array, array.Length * 2);
             }
         }
     }
