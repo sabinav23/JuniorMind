@@ -6,23 +6,19 @@ namespace IntArrayProject
     public class IntArray
     {
         public int[] array;
-        int count = 0;
 
         public IntArray()
         {
             this.array = new int[4];
         }
 
+        public int Count { get; private set; }
+
         public void Add(int element)
         {
             EnsureCapacity();
-            array[count] = element;
-            count++;
-        }
-
-        public int Count()
-        {
-            return count;
+            array[Count] = element;
+            Count++;
         }
 
         public int Element(int index)
@@ -42,7 +38,7 @@ namespace IntArrayProject
 
         public int IndexOf(int element)
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (array[i] == element)
                 {
@@ -58,13 +54,13 @@ namespace IntArrayProject
             EnsureCapacity();
             MoveElementsToTheRight(index);
             SetElement(index, element);
-            count++;
+            Count++;
         }
 
         public void Clear()
         {
             Array.Resize(ref array, 0);
-            count = 0;
+            Count = 0;
         }
 
         public void Remove(int element)
@@ -80,7 +76,7 @@ namespace IntArrayProject
         public void RemoveAt(int index)
         {
             MoveElementsToTheLeft(index);
-            count--;
+            Count--;
         }
         
         private void MoveElementsToTheLeft(int position)
@@ -101,7 +97,7 @@ namespace IntArrayProject
 
         public void EnsureCapacity()
         {
-            if (count == array.Length)
+            if (Count == array.Length)
             {
                 Array.Resize(ref array, array.Length * 2);
             }
