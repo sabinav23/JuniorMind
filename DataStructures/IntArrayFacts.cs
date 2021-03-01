@@ -18,7 +18,7 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            Assert.True(arr.Element(5) == 9);
+            Assert.True(arr[5] == 9);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            Assert.Equal(9, arr.Element(4));
+            Assert.Equal(9, arr[4]);
         }
 
         [Fact]
@@ -60,9 +60,9 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            arr.SetElement(0, 2);
+            arr[0] = 2;
 
-            Assert.Equal(2, arr.Element(0));
+            Assert.Equal(2, arr[0]);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            arr.SetElement(0, 2);
+            arr[0] = 2;
 
             Assert.True(arr.Contains(8));
         }
@@ -132,7 +132,7 @@ namespace IntArrayProject
 
             arr.Insert(3, 10);
 
-            Assert.Equal(9, arr.Element(4));
+            Assert.Equal(9, arr[4]);
             Assert.Equal(5, arr.Count);
         }
 
@@ -164,7 +164,7 @@ namespace IntArrayProject
 
             arr.Remove(5);
 
-            Assert.Equal(6, arr.Element(0));
+            Assert.Equal(6, arr[0]);
             Assert.Equal(4, arr.Count);
         }
 
@@ -181,7 +181,7 @@ namespace IntArrayProject
 
             arr.RemoveAt(2);
 
-            Assert.Equal(9, arr.Element(2));
+            Assert.Equal(9, arr[2]);
             Assert.Equal(4, arr.Count);
         }
 

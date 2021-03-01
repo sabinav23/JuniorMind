@@ -12,6 +12,12 @@ namespace IntArrayProject
             this.array = new int[4];
         }
 
+        public int this[int index]
+        {
+            get => array[index];
+            set => array[index] = value;
+        }
+
         public int Count { get; private set; }
 
         public void Add(int element)
@@ -19,16 +25,6 @@ namespace IntArrayProject
             EnsureCapacity();
             array[Count] = element;
             Count++;
-        }
-
-        public int Element(int index)
-        {
-            return array[index];
-        }
-
-        public void SetElement(int index, int element)
-        {
-            array[index] = element;
         }
 
         public bool Contains(int element)
@@ -53,7 +49,7 @@ namespace IntArrayProject
         {
             EnsureCapacity();
             MoveElementsToTheRight(index);
-            SetElement(index, element);
+            this[index] = element;
             Count++;
         }
 
