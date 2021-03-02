@@ -12,15 +12,15 @@ namespace IntArrayProject
             this.array = new int[4];
         }
 
-        public int this[int index]
+        public virtual int this[int index]
         {
             get => array[index];
             set => array[index] = value;
         }
 
-        public int Count { get; private set; }
+        public int Count { get; set; }
 
-        public void Add(int element)
+        public virtual void Add(int element)
         {
             EnsureCapacity();
             array[Count] = element;
@@ -45,7 +45,7 @@ namespace IntArrayProject
             return -1;
         }
 
-        public void Insert(int index, int element)
+        public virtual void Insert(int index, int element)
         {
             EnsureCapacity();
             MoveElementsToTheRight(index);
@@ -83,9 +83,9 @@ namespace IntArrayProject
             }
         }
 
-        private void MoveElementsToTheRight(int position)
+        protected void MoveElementsToTheRight(int position)
         {
-            for (int i = array.Length - 1; i >= position; i--)
+            for (int i = array.Length - 1; i > position; i--)
             {
                 array[i] = array[i - 1];
             }
