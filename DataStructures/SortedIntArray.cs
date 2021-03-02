@@ -8,9 +8,8 @@ namespace IntArrayProject
     {
         public override void Add(int element)
         {
-            EnsureCapacity();
-            AddInSortedOrder(element);
-            Count++;
+            int position = FindIndexForElement(element);
+            base.Insert(position, element);
         }
 
         public override int this[int index] { get => base[index];  set
@@ -27,9 +26,7 @@ namespace IntArrayProject
             int position = FindIndexForElement(element);
             if (position == index)
             {
-                EnsureCapacity();
-                InsertElementAtCorrectPosition(position, element);
-                Count++;
+                base.Insert(index, element);
             }
         }
 
@@ -42,7 +39,7 @@ namespace IntArrayProject
             else
             {
                 int position = FindIndexForElement(element);
-                InsertElementAtCorrectPosition(position, element);
+                base.Insert(position, element);
             }
         }
 
@@ -57,12 +54,6 @@ namespace IntArrayProject
             }
 
             return Count;
-        }
-
-        private void InsertElementAtCorrectPosition(int position, int element)
-        {
-            MoveElementsToTheRight(position);
-            this[position] = element;
         }
     }
 }

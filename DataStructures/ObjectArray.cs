@@ -1,18 +1,19 @@
-using System;
-using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace IntArrayProject
 {
-    public class IntArray
+    class ObjectArray
     {
-        public int[] array;
+        public Object[] array;
 
-        public IntArray()
+        public ObjectArray()
         {
-            this.array = new int[4];
+            this.array = new Object[4];
         }
 
-        public virtual int this[int index]
+        public virtual Object this[int index]
         {
             get => array[index];
             set => array[index] = value;
@@ -20,23 +21,23 @@ namespace IntArrayProject
 
         public int Count { get; set; }
 
-        public virtual void Add(int element)
+        public virtual void Add(Object element)
         {
             EnsureCapacity();
             array[Count] = element;
             Count++;
         }
 
-        public bool Contains(int element)
+        public bool Contains(Object element)
         {
             return IndexOf(element) != -1;
         }
 
-        public int IndexOf(int element)
+        public int IndexOf(Object element)
         {
             for (int i = 0; i < Count; i++)
             {
-                if (array[i] == element)
+                if (array[i].Equals(element))
                 {
                     return i;
                 }
@@ -45,7 +46,7 @@ namespace IntArrayProject
             return -1;
         }
 
-        public virtual void Insert(int index, int element)
+        public virtual void Insert(int index, Object element)
         {
             EnsureCapacity();
             MoveElementsToTheRight(index);
@@ -59,7 +60,7 @@ namespace IntArrayProject
             Count = 0;
         }
 
-        public void Remove(int element)
+        public void Remove(Object element)
         {
             int position = IndexOf(element);
             if (position != -1)
@@ -74,7 +75,7 @@ namespace IntArrayProject
             MoveElementsToTheLeft(index);
             Count--;
         }
-        
+
         private void MoveElementsToTheLeft(int position)
         {
             for (int i = position; i < array.Length - 1; i++)
@@ -99,5 +100,4 @@ namespace IntArrayProject
             }
         }
     }
-
 }
