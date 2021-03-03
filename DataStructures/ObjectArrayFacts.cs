@@ -26,15 +26,13 @@ namespace IntArrayProject
         {
             var arr = new ObjectArray();
             arr.Add(5);
-            arr.Add(6);
-            arr.Add(5);
-            arr.Add(5);
+            arr.Add("ceva");
             arr.Add(6);
             arr.Add(7);
-            arr.Add(8);
+            arr.Add("altceva");
             arr.Add(9);
 
-            Assert.Equal(8, arr.Count);
+            Assert.Equal(6, arr.Count);
         }
 
         [Fact]
@@ -42,12 +40,13 @@ namespace IntArrayProject
         {
             var arr = new ObjectArray();
             arr.Add(5);
+            arr.Add("ceva");
             arr.Add(6);
             arr.Add(7);
-            arr.Add(8);
+            arr.Add("altceva");
             arr.Add(9);
 
-            Assert.Equal(9, arr[4]);
+            Assert.Equal("altceva", arr[4]);
         }
 
         [Fact]
@@ -60,9 +59,9 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            arr[0] = 2;
+            arr[0] = "altceva";
 
-            Assert.Equal(2, arr[0]);
+            Assert.Equal("altceva", arr[0]);
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            Assert.False(arr.Contains(2));
+            Assert.False(arr.Contains("altceva"));
         }
 
         [Fact]
@@ -116,7 +115,7 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
 
-            Assert.Equal(-1, arr.IndexOf(2));
+            Assert.Equal(-1, arr.IndexOf("da"));
         }
 
 
@@ -156,7 +155,7 @@ namespace IntArrayProject
         {
             var arr = new ObjectArray();
             arr.Add(5);
-            arr.Add(6);
+            arr.Add("altceva");
             arr.Add(5);
             arr.Add(5);
             arr.Add(6);
@@ -164,7 +163,7 @@ namespace IntArrayProject
 
             arr.Remove(5);
 
-            Assert.Equal(6, arr[0]);
+            Assert.Equal("altceva", arr[0]);
             Assert.Equal(4, arr.Count);
         }
 
@@ -179,6 +178,25 @@ namespace IntArrayProject
             arr.Add(10);
 
 
+            arr.RemoveAt(2);
+
+            Assert.Equal(9, arr[2]);
+            Assert.Equal(4, arr.Count);
+        }
+
+        [Fact]
+        public void ChangeElementValueToTen()
+        {
+            var arr = new ObjectArray();
+            arr.Add(6);
+            arr.Add(7);
+            arr.Add(8);
+            arr.Add(9);
+            arr.Add(10);
+
+            foreach (Object element in arr){
+                Console.WriteLine(element);
+            }
             arr.RemoveAt(2);
 
             Assert.Equal(9, arr[2]);
