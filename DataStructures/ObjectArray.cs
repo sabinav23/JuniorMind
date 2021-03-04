@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IntArrayProject
 {
-    class ObjectArray
+    class ObjectArray : IEnumerable
     {
         public Object[] array;
 
@@ -100,13 +100,16 @@ namespace IntArrayProject
             }
         }
 
-        public IEnumerable NextElement()
+        public IEnumerator GetEnumerator()
         {
             foreach (Object el in array)
             {
-                yield return el;
+                if (Count > 0)
+                {
+                    yield return el;
+                }
+                Count--;              
             }
         }
-
     }
 }

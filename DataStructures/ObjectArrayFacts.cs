@@ -184,21 +184,49 @@ namespace IntArrayProject
             Assert.Equal(9, arr[2]);
             Assert.Equal(4, arr.Count);
         }
-
+        
         [Fact]
-        public void ChangeElementValueToTen()
+        public void FunctionReturnsTrueWhenArrayHasElementsAtEveryIndex()
         {
             var arr = new ObjectArray();
             arr.Add(6);
             arr.Add(7);
             arr.Add(8);
             arr.Add(9);
-            arr.Add(10);
 
-            arr.RemoveAt(2);
+            IEnumerator en = arr.GetEnumerator();
 
-            Assert.Equal(9, arr[2]);
-            Assert.Equal(4, arr.Count);
+            Assert.True(en.MoveNext());
+            Assert.Equal(6, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(7, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(8, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(9, en.Current);
+            Assert.False(en.MoveNext());
         }
+
+        [Fact]
+        public void ReturnsFalseWhenArrayIsEmpty()
+        {
+            var arr = new ObjectArray();
+            IEnumerator en = arr.GetEnumerator();
+            Assert.False(en.MoveNext());
+        }
+        
+        [Fact]
+        public void ReturnsTrueForFirstElement()
+        {
+            var arr = new ObjectArray();
+            arr.Add(6);
+
+            IEnumerator en = arr.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(6, en.Current);
+            Assert.False(en.MoveNext());
+        }
+        
     }
 }
