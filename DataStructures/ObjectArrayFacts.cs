@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -194,9 +195,6 @@ namespace IntArrayProject
             arr.Add(9);
             arr.Add(10);
 
-            foreach (Object element in arr){
-                Console.WriteLine(element);
-            }
             arr.RemoveAt(2);
 
             Assert.Equal(9, arr[2]);

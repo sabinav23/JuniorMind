@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -42,7 +43,6 @@ namespace IntArrayProject
                     return i;
                 }
             }
-
             return -1;
         }
 
@@ -99,5 +99,14 @@ namespace IntArrayProject
                 Array.Resize(ref array, array.Length * 2);
             }
         }
+
+        public IEnumerable NextElement()
+        {
+            foreach (Object el in array)
+            {
+                yield return el;
+            }
+        }
+
     }
 }
