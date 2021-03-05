@@ -5,16 +5,17 @@ using System.Text;
 
 namespace IntArrayProject
 {
-    class ObjectArray : IEnumerable
+    class List<T> : IEnumerable<T>
     {
-        public Object[] array;
 
-        public ObjectArray()
+        public T[] array;
+
+        public List()
         {
-            this.array = new Object[4];
+            array = new T[4];
         }
 
-        public virtual Object this[int index]
+        public virtual T this[int index]
         {
             get => array[index];
             set => array[index] = value;
@@ -22,19 +23,19 @@ namespace IntArrayProject
 
         public int Count { get; set; }
 
-        public virtual void Add(Object element)
+        public virtual void Add(T element)
         {
             EnsureCapacity();
             array[Count] = element;
             Count++;
         }
 
-        public bool Contains(Object element)
+        public bool Contains(T element)
         {
             return IndexOf(element) != -1;
         }
 
-        public int IndexOf(Object element)
+        public int IndexOf(T element)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -46,7 +47,7 @@ namespace IntArrayProject
             return -1;
         }
 
-        public virtual void Insert(int index, Object element)
+        public virtual void Insert(int index, T element)
         {
             EnsureCapacity();
             MoveElementsToTheRight(index);
@@ -60,7 +61,7 @@ namespace IntArrayProject
             Count = 0;
         }
 
-        public void Remove(Object element)
+        public void Remove(T element)
         {
             int position = IndexOf(element);
             if (position != -1)
@@ -100,16 +101,17 @@ namespace IntArrayProject
             }
         }
 
-        public IEnumerator GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            foreach (Object el in array)
+            for (int i = 0; i < Count; i++)
             {
-                if (Count > 0)
-                {
-                    yield return el;
-                }
-                Count--;              
+                yield return array[i];
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

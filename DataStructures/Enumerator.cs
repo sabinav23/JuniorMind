@@ -5,6 +5,7 @@ using System.Text;
 
 namespace IntArrayProject
 {
+    /*
     class Enumerator : IEnumerator
     {
 
@@ -35,4 +36,5 @@ namespace IntArrayProject
             position = -1;
         }
     }
+    */
 }
