@@ -4,15 +4,15 @@ using System.Text;
 
 namespace IntArrayProject
 {
-    class SortedIntArray : IntArray
+    class SortedList<T> : List<T> where T : IComparable<T>
     {
-        public override void Add(int element)
+        public override void Add(T element)
         {
             int position = FindIndexForElement(element);
             base.Insert(position, element);
         }
 
-        public override int this[int index] { get => base[index];  set
+        public override T this[int index] { get => base[index];  set
             {
                 if (index == FindIndexForElement(value))
                 {
@@ -21,7 +21,7 @@ namespace IntArrayProject
             }
         }
 
-        public override void Insert(int index, int element)
+        public override void Insert(int index, T element)
         {
             int position = FindIndexForElement(element);
             if (position == index)
@@ -30,7 +30,7 @@ namespace IntArrayProject
             }
         }
 
-        private void AddInSortedOrder(int element)
+        private void AddInSortedOrder(T element)
         {
             if (Count == 0)
             {
@@ -43,11 +43,11 @@ namespace IntArrayProject
             }
         }
 
-        private int FindIndexForElement(int element)
+        private int FindIndexForElement(T element)
         {
             for (int i = 0; i < Count; i++)
             {
-                if (array[i] > element)
+                if (array[i].CompareTo(element) > 0)
                 {
                     return i;
                 }
