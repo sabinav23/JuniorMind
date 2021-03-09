@@ -69,14 +69,15 @@ namespace IntArrayProject
             Count = 0;
         }
        
-        public void Remove(T element)
+        public bool Remove(T element)
         {
             int position = IndexOf(element);
             if (position != -1)
             {
                 RemoveAt(position);
+                return true;
             }
-
+            return false;
         }
         
         public void RemoveAt(int index)
@@ -124,25 +125,11 @@ namespace IntArrayProject
                 array[i] = this.array[i - arrayIndex];
             }
         }
-
-        bool ICollection<T>.Remove(T item)
-        {
-            int position = IndexOf(item);
-            if (position != -1)
-            {
-                RemoveAt(position);
-                return true;
-            }
-            return false;
-
-        }
-
+        
         IEnumerator IEnumerable.GetEnumerator()
         {
-            for (int i = 0; i < Count; i++)
-            {
-                yield return array[i];
-            }
+            return this.GetEnumerator();
         }
+        
     }
 }
