@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IntArrayProject
 {
-    class List<T> : IEnumerable<T>
+    class List<T> : IList<T>
     {
 
         public T[] array;
@@ -22,6 +22,14 @@ namespace IntArrayProject
         }
 
         public int Count { get; set; }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public virtual void Add(T element)
         {
@@ -60,7 +68,7 @@ namespace IntArrayProject
             Array.Resize(ref array, 0);
             Count = 0;
         }
-
+       
         public void Remove(T element)
         {
             int position = IndexOf(element);
@@ -70,7 +78,7 @@ namespace IntArrayProject
             }
 
         }
-
+        
         public void RemoveAt(int index)
         {
             MoveElementsToTheLeft(index);
@@ -100,7 +108,7 @@ namespace IntArrayProject
                 Array.Resize(ref array, array.Length * 2);
             }
         }
-
+        
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
@@ -108,10 +116,33 @@ namespace IntArrayProject
                 yield return array[i];
             }
         }
+        
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            for (int i = arrayIndex; i < arrayIndex + Count; i++)
+            {
+                array[i] = this.array[i - arrayIndex];
+            }
+        }
+
+        bool ICollection<T>.Remove(T item)
+        {
+            int position = IndexOf(item);
+            if (position != -1)
+            {
+                RemoveAt(position);
+                return true;
+            }
+            return false;
+
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+            {
+                yield return array[i];
+            }
         }
     }
 }

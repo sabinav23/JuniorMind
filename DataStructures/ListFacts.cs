@@ -143,16 +143,16 @@ namespace IntArrayProject
             [Fact]
             public void RemoveFirstAppearance()
             {
-                var arr = new List<int>();
-                arr.Add(5);
-                arr.Add(5);
+                IList<int> arr = new List<int>();
                 arr.Add(5);
                 arr.Add(6);
+                arr.Add(5);
+                arr.Add(8);
 
 
-                arr.Remove(5);
-
-                Assert.Equal(5, arr[0]);
+                bool success = arr.Remove(5);
+                Assert.True(success);
+                Assert.Equal(6, arr[0]);
             }
 
             [Fact]
@@ -175,7 +175,7 @@ namespace IntArrayProject
             [Fact]
             public void FunctionReturnsTrueWhenArrayHasElementsAtEveryIndex()
             {
-                var arr = new List<int>();
+                IList<int> arr = new List<int>();
                 arr.Add(6);
                 arr.Add(7);
                 arr.Add(8);
@@ -197,7 +197,7 @@ namespace IntArrayProject
             [Fact]
             public void ReturnsFalseWhenArrayIsEmpty()
             {
-                var arr = new List<int>();
+                IList<int> arr = new List<int>();
                 IEnumerator<int> en = arr.GetEnumerator();
                 Assert.False(en.MoveNext());
             }
@@ -205,7 +205,7 @@ namespace IntArrayProject
             [Fact]
             public void ReturnsTrueForFirstElement()
             {
-                var arr = new List<int>();
+                IList<int> arr = new List<int>();
                 arr.Add(6);
 
                 IEnumerator<int> en = arr.GetEnumerator();
@@ -213,6 +213,26 @@ namespace IntArrayProject
                 Assert.True(en.MoveNext());
                 Assert.Equal(6, en.Current);
                 Assert.False(en.MoveNext());
+            }
+
+            [Fact]
+            public void CopyToMethodHasExpectedResult()
+            {
+                var arr = new List<int>();
+                arr.Add(6);
+                arr.Add(7);
+                arr.Add(8);
+                arr.Add(9);
+                arr.Add(10);
+
+                var intArrIndex = 5;
+                var intArrLength = arr.Count + intArrIndex;
+
+                var intArr = new int[intArrLength];
+                arr.CopyTo(intArr, intArrIndex);
+
+                Assert.Equal(10, intArr[9]);
+                Assert.Equal(5, arr.Count);
             }
     }
 }
