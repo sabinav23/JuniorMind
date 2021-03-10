@@ -57,6 +57,10 @@ namespace IntArrayProject
 
         public virtual void Insert(int index, T element)
         {
+            if (index < 0 || array.Length < index)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             EnsureCapacity();
             MoveElementsToTheRight(index);
             this[index] = element;
@@ -82,6 +86,10 @@ namespace IntArrayProject
         
         public void RemoveAt(int index)
         {
+            if (index < 0 || Count < index)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             MoveElementsToTheLeft(index);
             Count--;
         }
@@ -120,6 +128,21 @@ namespace IntArrayProject
         
         public void CopyTo(T[] array, int arrayIndex)
         {
+            if (array == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (arrayIndex < 0 || array.Length < arrayIndex)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            if (array.Length < arrayIndex + Count)
+            {
+                throw new ArgumentException();
+            }
+
             for (int i = arrayIndex; i < arrayIndex + Count; i++)
             {
                 array[i] = this.array[i - arrayIndex];
