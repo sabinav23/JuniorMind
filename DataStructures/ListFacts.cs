@@ -327,9 +327,9 @@ namespace IntArrayProject
         public void FunctionThrowsCorrectExceptionWhenAddingToReadOnlyList()
         {
             var arr = new List<int>();
-            var deco = new ListDecorator<int>(arr);
+            var readOnlyList = new ReadOnlyList<int>(arr);
 
-            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Add(6));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => readOnlyList.Add(6));
 
             Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
@@ -343,9 +343,9 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
             arr.Add(10);
-            var deco = new ListDecorator<int>(arr);
+            var readOnlyList = new ReadOnlyList<int>(arr);
 
-            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Insert(-1, 1));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => readOnlyList.Insert(-1, 1));
 
             Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
@@ -354,9 +354,9 @@ namespace IntArrayProject
         public void FunctionThrowsCorrectExceptionWhenRemovingInAnReadOnlyList()
         {
             var arr = new List<int>();
-            var deco = new ListDecorator<int>(arr);
+            var readOnlyList = new ReadOnlyList<int>(arr);
 
-            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Remove(6));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => readOnlyList.Remove(6));
 
             Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
@@ -365,9 +365,9 @@ namespace IntArrayProject
         public void FunctionThrowsCorrectExceptionWhenRemovingAtAGivenPositionInAnReadOnlyList()
         {
             var arr = new List<int>();
-            var deco = new ListDecorator<int>(arr);
+            var readOnlyList = new ReadOnlyList<int>(arr);
 
-            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.RemoveAt(6));
+            Exception exception = Assert.Throws<InvalidOperationException>(() => readOnlyList.RemoveAt(6));
 
             Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
@@ -381,9 +381,20 @@ namespace IntArrayProject
             arr.Add(8);
             arr.Add(9);
             arr.Add(10);
-            var deco = new ListDecorator<int>(arr);
+            var readOnlyList = new ReadOnlyList<int>(arr);
 
-            Assert.True(deco.Count == 5); 
+            Assert.True(readOnlyList.Count == 5);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionWhenSettingAValueInAnReadOnlyList()
+        {
+            var arr = new List<int>();
+            var readOnlyList = new ReadOnlyList<int>(arr);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => readOnlyList[2] = 5);
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
     }
 }
