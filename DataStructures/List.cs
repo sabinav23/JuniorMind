@@ -17,8 +17,25 @@ namespace IntArrayProject
 
         public virtual T this[int index]
         {
-            get => array[index];
-            set => array[index] = value;
+            get
+            {
+                if (array.Length < index)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                return array[index];
+            }
+            set
+            {
+                if (array.Length < index)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                array[index] = value;
+            }
+
         }
 
         public int Count { get; set; }

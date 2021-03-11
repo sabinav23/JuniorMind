@@ -22,25 +22,25 @@ namespace IntArrayProject
         [Fact]
         public void CountArrayElements()
         {
-        var arr = new List<string>();
+            var arr = new List<string>();
 
             arr.Add("ceva");
             arr.Add("altceva");
 
             Assert.Equal(2, arr.Count);
         }
-        
+
         [Fact]
         public void ReturnsCorrectElementAtGivenIndex()
         {
-        var arr = new List<string>();
+            var arr = new List<string>();
 
             arr.Add("ceva");
             arr.Add("altceva");
 
             Assert.Equal("altceva", arr[1]);
         }
-        
+
         [Fact]
         public void TheValueAtCurrentIndexIsChangedCorrectly()
         {
@@ -58,7 +58,7 @@ namespace IntArrayProject
         [Fact]
         public void ReturnsTrueForElementInArray()
         {
-        var arr = new List<int>();
+            var arr = new List<int>();
             arr.Add(6);
             arr.Add(7);
             arr.Add(8);
@@ -72,20 +72,20 @@ namespace IntArrayProject
         [Fact]
         public void ReturnsFalseWhenElementIsNotInArray()
         {
-        var arr = new List<string>();
+            var arr = new List<string>();
             arr.Add("da");
             arr.Add("nu");
             arr.Add("poate");
             arr.Add("sigur");
             arr.Add("never");
 
-        Assert.False(arr.Contains("niciodata"));
+            Assert.False(arr.Contains("niciodata"));
         }
 
         [Fact]
         public void ReturnsIndexWhenElementIsInArray()
         {
-        var arr = new List<int>();
+            var arr = new List<int>();
             arr.Add(5);
             arr.Add(6);
             arr.Add(7);
@@ -112,7 +112,7 @@ namespace IntArrayProject
         [Fact]
         public void AddElementAtGivenPosition()
         {
-        var arr = new List<int>();
+            var arr = new List<int>();
             arr.Add(5);
             arr.Add(6);
             arr.Add(7);
@@ -128,7 +128,7 @@ namespace IntArrayProject
         [Fact]
         public void ClearAllElements()
         {
-        var arr = new List<int>();
+            var arr = new List<int>();
             arr.Add(5);
             arr.Add(6);
 
@@ -306,6 +306,84 @@ namespace IntArrayProject
             Exception exception = Assert.Throws<ArgumentOutOfRangeException>(() => arr.RemoveAt(7));
 
             Assert.Equal("Specified argument was out of the range of valid values.", exception.Message);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionWhenIndexIsNegative()
+        {
+            var arr = new List<int>();
+            arr.Add(6);
+            arr.Add(7);
+            arr.Add(8);
+            arr.Add(9);
+            arr.Add(10);
+
+            Exception exception = Assert.Throws<ArgumentOutOfRangeException>(() => arr.Insert(-1, 1));
+
+            Assert.Equal("Specified argument was out of the range of valid values.", exception.Message);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionWhenAddingToReadOnlyList()
+        {
+            var arr = new List<int>();
+            var deco = new ListDecorator<int>(arr);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Add(6));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionInsertingIntoAReadOnlyMethod()
+        {
+            var arr = new List<int>();
+            arr.Add(6);
+            arr.Add(7);
+            arr.Add(8);
+            arr.Add(9);
+            arr.Add(10);
+            var deco = new ListDecorator<int>(arr);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Insert(-1, 1));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionWhenRemovingInAnReadOnlyList()
+        {
+            var arr = new List<int>();
+            var deco = new ListDecorator<int>(arr);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.Remove(6));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
+        }
+
+        [Fact]
+        public void FunctionThrowsCorrectExceptionWhenRemovingAtAGivenPositionInAnReadOnlyList()
+        {
+            var arr = new List<int>();
+            var deco = new ListDecorator<int>(arr);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => deco.RemoveAt(6));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
+        }
+
+        [Fact]
+        public void InsertsAsExpectedUsingDelegate()
+        {
+            var arr = new List<int>();
+            arr.Add(6);
+            arr.Add(7);
+            arr.Add(8);
+            arr.Add(9);
+            arr.Add(10);
+            var deco = new ListDecorator<int>(arr);
+
+            Assert.True(deco.Count == 5); 
         }
     }
 }
