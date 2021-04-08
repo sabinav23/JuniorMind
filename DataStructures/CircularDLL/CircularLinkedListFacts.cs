@@ -41,11 +41,11 @@ namespace CircularDoublyLinkedList
             Assert.True(list.Contains(7));
             Assert.True(list.Contains(8));
         }
-        
+
         [Fact]
         public void InsertBeforeNode()
         {
-            var list = new CircularLinkedList<int>();           
+            var list = new CircularLinkedList<int>();
             list.AddFirst(7);
             list.AddFirst(5);
 
@@ -53,8 +53,14 @@ namespace CircularDoublyLinkedList
             var value = 2;
             list.AddBefore(node, value);
             Assert.True(list.Count == 3);
-            Assert.True(node.Prev.Value == 2);
-            Assert.True(node.Next.Value == 5);
+            IEnumerator<int> en = list.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(2, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(7, en.Current);
         }
 
         [Fact]
@@ -70,8 +76,14 @@ namespace CircularDoublyLinkedList
             list.AddAfter(node, newNode);
 
             Assert.True(list.Count == 3);
-            Assert.True(node.Prev.Value == 5);
-            Assert.True(node.Next.Value == 2);
+            IEnumerator<int> en = list.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(7, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(2, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
         }
 
         [Fact]
@@ -208,10 +220,17 @@ namespace CircularDoublyLinkedList
             list.AddBefore(node2, 8);
 
             Assert.True(list.Count == 4);
-            Assert.True(node.Prev.Value == 2);
-            Assert.True(node.Next.Value == 5);
-            Assert.True(node2.Prev.Value == 8);
-            Assert.True(node2.Next.Value == 7);
+
+            IEnumerator<int> en = list.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(8, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(2, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(7, en.Current);
         }
         
         [Fact]
