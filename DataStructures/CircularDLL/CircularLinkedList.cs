@@ -12,7 +12,10 @@ namespace CircularDoublyLinkedList
 
         public CircularLinkedList()
         {
-            head = null;
+            head = new Node<T>();
+            head.Value = default(T);
+            head.Prev = head;
+            head.Next = head;
         }
         public int Count { get; set; }
 
@@ -24,88 +27,17 @@ namespace CircularDoublyLinkedList
             }
         }
 
-        public void AddFirst(T value)
-        {
-            Node<T> node = CreateNode(value);
-            if (head == null)
-            {
-                head = node;
-                Count++;
-            }
-            else
-            {
-                node.Next = head;
-                node.Prev = head.Prev;
-                head.Prev = node;
-                head.Prev.Next = node;
-                head = node;
-                Count++;
-            }
-        }
-
-        public void AddBefore(Node<T> givenNode, T value)
-        {
-            if (head == givenNode)
-            {
-                AddFirst(value);
-            }
-            else
-            {
-                Node<T> node = CreateNode(value);
-
-                node.Prev = givenNode.Prev;
-                node.Next = givenNode;
-                givenNode.Prev.Next = node;
-                givenNode.Prev = node;
-                Count++;
-            }
-        }
-
-        public void AddAfter(Node<T> givenNode, T value)
-        {
-            Node<T> node = CreateNode(value);
-
-            node.Prev = givenNode;
-            node.Next = givenNode.Next;
-            givenNode.Next.Prev = node;
-            givenNode.Next = node;       
-            Count++;
-            
-        }
-
-        public void RemoveFirst()
-        {
-            head.Next.Prev = head.Prev;
-            head.Prev.Next = head.Next;
-            head = head.Next;
-            Count--;
-        }
-
-        public void RemoveLast()
-        {
-            if (Count == 1)
-            {
-                head = null;
-                Count = 0;
-            }
-            else
-            {
-                head.Prev = head.Prev.Prev;
-                head.Prev.Prev.Next = head;
-                Count--;
-            }
-        }
-
-
         public void Clear()
         {
-            head = null;
+            head.Value = default(T);
+            head.Next = head;
+            head.Prev = head;
             Count = 0;
         }
 
         public bool Contains(T item)
         {
-            if (head == null)
+            if (head.Value.Equals(default(T)))
             {
                 return false;
             }
@@ -155,37 +87,40 @@ namespace CircularDoublyLinkedList
 
         public IEnumerator<T> GetEnumerator()
         {
-            Node<T> node = head;
+            Node<T> node = new Node<T>();
 
-            while (node.Next != head)
+            for (node = head; node.Next != head; node = node.Next)
             {
                 yield return node.Value;
-                node = node.Next;
             }
             yield return node.Value;
+
         }
 
-        public bool Remove(T item)
+        public bool Remove(Node<T> nodeToRemove)
         {
-           if (item.Equals(head.Value))
+            if (Count == 1)
             {
-                RemoveFirst();
+                head.Value = default(T);
+                head.Prev = head;
+                head.Next = head;
                 Count--;
                 return true;
             }
-           else if (item.Equals(head.Prev.Value))
+            Node<T> node = head;
+            if (nodeToRemove == head)
             {
-                RemoveLast();
+                node.Prev.Next = node.Next;
+                node.Next.Prev = node.Prev;
+                head = node.Next;
                 Count--;
                 return true;
             }
-           else
+            if (!head.Equals(default(T)))
             {
-                Node<T> node = new Node<T>();
-                node = head;
-                while (node.Next != head)
+                for (node = head.Next; node != head; node = node.Next)
                 {
-                    if (node.Value.Equals(item))
+                    if (node.Equals(nodeToRemove))
                     {
                         node.Prev.Next = node.Next;
                         node.Next.Prev = node.Prev;
@@ -195,12 +130,12 @@ namespace CircularDoublyLinkedList
                 }
             }
 
-            return false;      
+            return false;
         }
 
         public Node<T> Find(T item)
         {
-            if (head == null)
+            if (head.Value.Equals(default(T)))
             {
                 throw new ArgumentNullException();
             }
@@ -227,7 +162,7 @@ namespace CircularDoublyLinkedList
         public Node<T> FindLast(T item)
         {
             Node<T> last = null;
-            if (head == null)
+            if (head.Value.Equals(default(T)))
             {
                 throw new ArgumentNullException();
             }
@@ -256,22 +191,98 @@ namespace CircularDoublyLinkedList
             return this.GetEnumerator();
         }
 
-        public void Add(T item)
+        public void AddBefore(Node<T> node, Node<T> newNode)
         {
-            Node<T> node = new Node<T>();
-            node.Value = item;
-            if (head == null)
+            if (node.Value.Equals(default(T)) && newNode.Value.Equals(default(T)))
             {
-                AddFirst(item);
+                throw new ArgumentNullException();
+            }
+            else if (node.Equals(head) && Count == 1)
+            {
+                newNode.Prev = head;
+                newNode.Next = head;
+                node.Prev = newNode;
+                node.Next = newNode;
+                head = newNode;
+                Count++;
             }
             else
             {
-                node.Prev = head.Prev;
-                node.Next = head.Prev.Next;
-                head.Prev.Next = node;
-                head.Prev = node;
+                newNode.Next = node;
+                newNode.Prev = node.Prev;
+                node.Prev.Next = newNode;
+                node.Prev = newNode;
                 Count++;
             }
+        }
+
+        public void AddBefore(Node<T> node, T value)
+        {
+            Node<T> newNode = CreateNode(value);
+            AddBefore(node, newNode);
+        }
+
+        public void AddFirst(Node<T> node)
+        {
+            if (node.Value.Equals(default(T)))
+            {
+                throw new ArgumentNullException();
+            }
+            if (head.Value.Equals(default(T)))
+            {
+                SetHead(node);
+            }
+            else
+            {
+                AddBefore(head, node);
+            }
+        }
+
+        public void AddFirst(T value)
+        {
+            Node<T> node = CreateNode(value);
+            if (head.Value.Equals(default(T)))
+            {
+                SetHead(node);
+            }
+            else
+            {
+                AddBefore(head, node);
+            }
+        }
+
+        public void AddLast(Node<T> node)
+        {
+            if (head.Value.Equals(default(T)))
+            {
+                SetHead(node);
+            }
+            Node<T> keephead = head;
+            AddBefore(head, node);
+            head = keephead;
+        }
+
+        public void Add(T item)
+        {
+            Node<T> node = CreateNode(item);
+            if (head.Value.Equals(default(T)))
+            {
+                SetHead(node);
+            }
+            Node<T> keephead = head;
+            AddBefore(head, node);
+            head = keephead;
+        }
+
+        public void AddAfter(Node<T> node, Node<T> newNode)
+        {
+            AddBefore(node.Next, newNode);
+        }
+
+        public void AddAfter(Node<T> givenNode, T value)
+        {
+            Node<T> node = CreateNode(value);
+            AddBefore(givenNode.Next, node);
         }
 
         public Node<T> CreateNode(T value)
@@ -282,5 +293,50 @@ namespace CircularDoublyLinkedList
             node.Next = node;
             return node;
         }
+
+
+        public bool Remove(T item)
+        {
+            Node<T> node = Find(item);
+            if (!node.Equals(default(T)))
+            {
+                Remove(node);
+                return true;
+            }
+            
+            return false;
+        }
+
+        public void RemoveFirst()
+        {
+            if (head.Value.Equals(default(T)))
+            {
+                throw new InvalidOperationException();
+            }
+            else
+            {
+                Remove(head);
+            }
+        }
+
+        public void RemoveLast()
+        {
+            if (head.Value.Equals(default(T)))
+            {
+                throw new InvalidOperationException();
+            }
+            else
+            {
+                Remove(head.Prev);
+            }
+        }
+
+        public void SetHead(Node<T> node)
+        {
+            head = node;
+            Count++;
+        }
     }
+
+
 }
