@@ -64,6 +64,24 @@ namespace CircularDoublyLinkedList
         }
 
         [Fact]
+        public void InsertBeforeNodeOutsideOfList()
+        {
+            var list = new CircularLinkedList<int>();
+            var list2 = new CircularLinkedList<int>();
+            list2.AddFirst(7);
+            list.AddFirst(5);
+
+            var node = list2.Find(7);
+            var newNode = list.Find(5);
+            
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => list2.AddBefore(node, newNode));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
+           
+        }
+
+        [Fact]
         public void InsertAfterNode()
         {
             var list = new CircularLinkedList<int>();
@@ -99,6 +117,21 @@ namespace CircularDoublyLinkedList
             list.Remove(node);
 
             Assert.True(list.Count == 2);
+        }
+
+        [Fact]
+        public void RemoveNodeFromAnotherList()
+        {
+            var list = new CircularLinkedList<int>();
+            var list2 = new CircularLinkedList<int>();
+            list.AddFirst(2);
+            list2.Add(5);
+
+            Node<int> node2 = list.Find(2);
+
+            Exception exception = Assert.Throws<InvalidOperationException>(() => list2.Remove(node2));
+
+            Assert.Equal("Operation is not valid due to the current state of the object.", exception.Message);
         }
 
         [Fact]

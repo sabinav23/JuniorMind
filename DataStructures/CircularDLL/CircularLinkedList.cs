@@ -16,6 +16,7 @@ namespace CircularDoublyLinkedList
             head.Value = default(T);
             head.Prev = head;
             head.Next = head;
+            head.List = this;
         }
         public int Count { get; set; }
 
@@ -81,6 +82,16 @@ namespace CircularDoublyLinkedList
 
         public bool Remove(Node<T> nodeToRemove)
         {
+            if (nodeToRemove == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (nodeToRemove.List != this && nodeToRemove.List != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             for (var node = head.Next; node != head; node = node.Next)
             {
                 if (node.Equals(nodeToRemove))
@@ -128,6 +139,16 @@ namespace CircularDoublyLinkedList
 
         public void AddBefore(Node<T> node, Node<T> newNode)
         {
+            if (node == null || newNode == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this || (newNode.List != this && newNode.List != null))
+            {
+                throw new InvalidOperationException();
+            }
+
             newNode.Prev = node.Prev;
             newNode.Next = node;
             node.Prev.Next = newNode;
@@ -137,12 +158,32 @@ namespace CircularDoublyLinkedList
 
         public void AddBefore(Node<T> node, T value)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this && node.List != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             Node<T> newNode = CreateNode(value);
             AddBefore(node, newNode);
         }
 
         public void AddFirst(Node<T> node)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this && node.List != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             AddAfter(head, node);
         }
 
@@ -154,6 +195,16 @@ namespace CircularDoublyLinkedList
 
         public void AddLast(Node<T> node)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this && node.List != null)
+            {
+                throw new InvalidOperationException();
+            }
+
             AddBefore(head, node);
         }
 
@@ -165,11 +216,29 @@ namespace CircularDoublyLinkedList
 
         public void AddAfter(Node<T> node, Node<T> newNode)
         {
+            if (node == null || newNode == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this || (newNode.List != this && newNode.List != null))
+            {
+                throw new InvalidOperationException();
+            }
             AddBefore(node.Next, newNode);
         }
 
         public void AddAfter(Node<T> givenNode, T value)
         {
+            if (givenNode == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (givenNode.List != this && givenNode.List != null)
+            {
+                throw new InvalidOperationException();
+            }
             Node<T> node = CreateNode(value);
             AddBefore(givenNode.Next, node);
         }
@@ -178,6 +247,7 @@ namespace CircularDoublyLinkedList
         {
             Node<T> node = new Node<T>();
             node.Value = value;
+            node.List = this;
             return node;
         }
 
