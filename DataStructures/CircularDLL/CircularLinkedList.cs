@@ -82,15 +82,7 @@ namespace CircularDoublyLinkedList
 
         public bool Remove(Node<T> nodeToRemove)
         {
-            if (nodeToRemove == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (nodeToRemove.List != this && nodeToRemove.List != null)
-            {
-                throw new InvalidOperationException();
-            }
+            ValidateNode(nodeToRemove);
 
             for (var node = head.Next; node != head; node = node.Next)
             {
@@ -139,16 +131,7 @@ namespace CircularDoublyLinkedList
 
         public void AddBefore(Node<T> node, Node<T> newNode)
         {
-            if (node == null || newNode == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (node.List != this || (newNode.List != this && newNode.List != null))
-            {
-                throw new InvalidOperationException();
-            }
-
+            ValidateNodes(node, newNode);
             newNode.Prev = node.Prev;
             newNode.Next = node;
             node.Prev.Next = newNode;
@@ -158,15 +141,7 @@ namespace CircularDoublyLinkedList
 
         public void AddBefore(Node<T> node, T value)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (node.List != this && node.List != null)
-            {
-                throw new InvalidOperationException();
-            }
+            ValidateNode(node);
 
             Node<T> newNode = CreateNode(value);
             AddBefore(node, newNode);
@@ -174,15 +149,7 @@ namespace CircularDoublyLinkedList
 
         public void AddFirst(Node<T> node)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (node.List != this && node.List != null)
-            {
-                throw new InvalidOperationException();
-            }
+            ValidateNode(node);
 
             AddAfter(head, node);
         }
@@ -195,15 +162,7 @@ namespace CircularDoublyLinkedList
 
         public void AddLast(Node<T> node)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (node.List != this && node.List != null)
-            {
-                throw new InvalidOperationException();
-            }
+            ValidateNode(node);
 
             AddBefore(head, node);
         }
@@ -216,29 +175,14 @@ namespace CircularDoublyLinkedList
 
         public void AddAfter(Node<T> node, Node<T> newNode)
         {
-            if (node == null || newNode == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            if (node.List != this || (newNode.List != this && newNode.List != null))
-            {
-                throw new InvalidOperationException();
-            }
+            ValidateNode(node);
             AddBefore(node.Next, newNode);
         }
 
         public void AddAfter(Node<T> givenNode, T value)
         {
-            if (givenNode == null)
-            {
-                throw new ArgumentNullException();
-            }
+            ValidateNode(givenNode);
 
-            if (givenNode.List != this && givenNode.List != null)
-            {
-                throw new InvalidOperationException();
-            }
             Node<T> node = CreateNode(value);
             AddBefore(givenNode.Next, node);
         }
@@ -282,6 +226,32 @@ namespace CircularDoublyLinkedList
             }
 
             Remove(head.Prev);
+        }
+
+        public void ValidateNode(Node<T> node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this && node.List != null)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        public void ValidateNodes(Node<T> node, Node<T> newNode)
+        {
+            if (node == null || newNode == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (node.List != this || (newNode.List != this && newNode.List != null))
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
