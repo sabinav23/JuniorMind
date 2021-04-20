@@ -242,5 +242,37 @@ namespace Dictionary
             Assert.True(val == 0);
         }
 
+        [Fact]
+        public void TryGetKeys()
+        {
+            var dictionary = new Dictionary<int, int>();
+            dictionary.Add(50, 2);
+            dictionary.Add(20, 5);
+            dictionary.Add(15, 8);
+            dictionary.Add(95, 15);
+            dictionary.Add(19, 85);
+
+            var key = dictionary.Keys;
+            Assert.True(key.Contains(50));
+            Assert.True(key.Contains(95));
+            Assert.False(key.Contains(8));
+        }
+
+        [Fact]
+        public void TryGetValues()
+        {
+            var dictionary = new Dictionary<int, int>();
+            dictionary.Add(50, 2);
+            dictionary.Add(20, 5);
+            dictionary.Add(15, 8);
+            dictionary.Add(95, 15);
+            dictionary.Add(19, 85);
+
+           var val = dictionary.Values;
+            Assert.True(val.Contains(5));
+            Assert.True(val.Contains(15));
+            Assert.False(val.Contains(50));
+        }
+
     }
 }
