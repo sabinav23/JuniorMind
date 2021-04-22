@@ -12,7 +12,6 @@ namespace Dictionary
 
         private int[] mainArray;
         private EntryContent<TKey, TValue>[] entries;
-        private FreePosition[] freePositions;
         private int freeIndex;
         
 
@@ -20,7 +19,6 @@ namespace Dictionary
         {
             mainArray = new int[size];
             entries = new EntryContent<TKey, TValue>[size];
-            freePositions = new FreePosition[size];
             Array.Fill(mainArray, -1);
             freeIndex = -1;
         }
@@ -28,8 +26,7 @@ namespace Dictionary
         public TValue this[TKey key]
         {
             get {
-                int positionInEntiesArray = mainArray[BucketIndex(key)];
-                int index = FindPositionOfElement(positionInEntiesArray, key);
+                int index = Find(key);
                 if (index != -1)
                 {
                     return entries[index].Value;
@@ -39,40 +36,49 @@ namespace Dictionary
             }
             set
             {
-                int positionInEntiesArray = mainArray[BucketIndex(key)];
-                int index = FindPositionOfElement(positionInEntiesArray, key);
-                if (index != -1)
+                int index = Find(key);
+                if (index != -1 && !entries[index].Value.Equals(value))
                 {
                     entries[index].Value = value;
                 }
             }
         }
 
-        private int FindPositionOfElement(int positionInEntiesArray, TKey key)
+        private (int index, int previous) FindElement(TKey key)
         {
+            int previous = -1;
+            int positionInEntiesArray = mainArray[BucketIndex(key)];
             for (int index = positionInEntiesArray; index != -1; index = entries[positionInEntiesArray].Next)
             {
                 if (entries[index].Key.Equals(key))
                 {
-                    return index;
+                    return (index, previous);
                 }
+                previous = index;
             }
 
-            return -1;
+            return (-1, -1);
         }
+
+        private int Find(TKey key)
+        {
+            var (index, _) = FindElement(key);
+
+            return index;
+        }  
 
         public ICollection<TKey> Keys { 
             get
             {
                 var list = new List<TKey>();
-                for (int i = 0; i < mainArray.Length; i++)
-                {
-                    for (int j = mainArray[i]; j != -1; j= entries[j].Next)
-                    {
-                        list.Add(entries[j].Key);
-                    }
-                }
+                var en = this.GetEnumerator();
+                en.MoveNext();
 
+                while (en.MoveNext())
+                {
+                    list.Add(en.Current.Key);
+                }
+               
                 return list;
             }
             
@@ -82,21 +88,19 @@ namespace Dictionary
             get
             {
                 var list = new List<TValue>();
-                for (int i = 0; i < mainArray.Length; i++)
-                {
-                    for (int j = mainArray[i]; j != -1; j = entries[j].Next)
-                    {
-                        list.Add(entries[j].Value);
-                    }
-                }
+                var en = this.GetEnumerator();
+                en.MoveNext();
 
+                while (en.MoveNext())
+                {
+                    list.Add(en.Current.Value);
+                }
+                
                 return list;
             }
         }
 
-        public int Count { get; set; }
-
-        public int entriesCount { get; set; }
+        public int Count { get; private set; }
 
         public bool IsReadOnly
         {
@@ -117,12 +121,12 @@ namespace Dictionary
 
             if (freeIndex != -1)
             {
-                ind = freePositions[0].Value;
-                freeIndex = freePositions[0].Next;
+                ind = freeIndex;
+                freeIndex = entries[freeIndex].Next;
             }
             else
             {
-               ind = entriesCount;
+               ind = Count;
             }
 
             mainArray[positionInEntiesArray] = ind;
@@ -132,7 +136,6 @@ namespace Dictionary
             entries[ind].Next = previousValue;
 
             Count++;
-            entriesCount++;
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
@@ -143,25 +146,14 @@ namespace Dictionary
         public void Clear()
         {
             Array.Fill(mainArray, -1);
-            for (int i = 0; i < entries.Length; i++)
-            {
-                if (entries[i] != null)
-                {
-                    entries[i].Key = default(TKey);
-                    entries[i].Value = default(TValue);
-                    entries[i].Next = -1;
-                }
-            }
-
             Count = 0;
-            entriesCount = 0;
             freeIndex = -1;
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
             int positionInEntiesArray = mainArray[BucketIndex(item.Key)];
-            int index = FindPositionOfElement(positionInEntiesArray, item.Key);
+            int index = Find(item.Key);
 
             return index != 1 && entries[index].Value.Equals(item.Value);
 
@@ -170,7 +162,7 @@ namespace Dictionary
         public bool ContainsKey(TKey key)
         {
             int positionInEntiesArray = mainArray[BucketIndex(key)];
-            int index = FindPositionOfElement(positionInEntiesArray, key);
+            int index = Find(key);
 
             return index != -1;
 
@@ -195,7 +187,7 @@ namespace Dictionary
             var en = this.GetEnumerator();
             en.MoveNext();
 
-            for (int i = 0; i < arrayIndex + entriesCount; i++)
+            for (int i = 0; i < arrayIndex + Count; i++)
             {
                 array[i] = en.Current;
                 en.MoveNext();
@@ -230,76 +222,46 @@ namespace Dictionary
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            var index = BucketIndex(item.Key);
-            if (index == -1)
-            {
-                return false;
-            }
-
-            if (entries[mainArray[index]].Key.Equals(item.Key) && entries[mainArray[index]].Value.Equals(item.Value))
-            {
-                RemoveFirstInBucket(mainArray[index], index);
-                return true;
-            }
-            else
-            {
-                int positionInEntiesArray = mainArray[index];
-                int position = FindPositionOfElement(positionInEntiesArray, item.Key);
-                if (position != -1)
-                {
-                    int previousPositon = GetPreviousIndex(positionInEntiesArray, item.Key);
-                    RemoveElement(position);
-                    entries[previousPositon].Next = entries[position].Next; 
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private int GetPreviousIndex(int positionInEntiesArray, TKey key)
-        {
-            int prev = -1;
-            for (int index = positionInEntiesArray; index != -1; index = entries[positionInEntiesArray].Next)
-            {
-                if (entries[index].Key.Equals(key))
-                {
-                    return prev;
-                }
-                prev = index;
-            }
-
-            return -1;
+           (bool IsDeleted, _) = RemoveItem(item.Key, item.Value);
+            return IsDeleted;
         }
 
         public bool Remove(TKey key, out TValue value)
         {
-            var index = BucketIndex(key);
-            if (entries[mainArray[index]].Key.Equals(key))
+            (bool IsDeleted, TValue val) = RemoveItem(key, default(TValue));
+
+            value = val;
+            return IsDeleted;
+
+        }
+
+        private (bool deleted, TValue value) RemoveItem(TKey key, TValue value)
+        {
+            int pos = BucketIndex(key);
+            (int position, int previousPosition) = FindElement(key);
+            if (position == -1)
             {
-                value = entries[mainArray[index]].Value;
-                RemoveFirstInBucket(mainArray[index], index);
-                AddInFreePositionsArray(index);
-                return true;
+                return (false, value);
+            }
+
+            if (entries[position].Key.Equals(key) && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
+            {
+                value = entries[position].Value;
+                RemoveFirstInBucket(position, pos);
+                return (true, value);
             }
             else
             {
-                int positionInEntiesArray = mainArray[index];
-                int position = FindPositionOfElement(positionInEntiesArray, key);
                 if (position != -1)
                 {
-                    value = entries[positionInEntiesArray].Value;
-                    int previousPositon = GetPreviousIndex(positionInEntiesArray, key);
+                    value = entries[position].Value;
                     RemoveElement(position);
-                    entries[previousPositon].Next = entries[position].Next;
-                    AddInFreePositionsArray(positionInEntiesArray);
-                    return true;
+                    entries[previousPosition].Next = entries[position].Next;
+                    return (true, value);
                 }
             }
 
-            value = default(TValue);
-            return false;
-
+            return (false, value);
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
@@ -307,7 +269,7 @@ namespace Dictionary
             var index = BucketIndex(key);
 
             int positionInEntiesArray = mainArray[index];
-            int position = FindPositionOfElement(positionInEntiesArray, key);
+            int position = Find(key);
             if (position != -1)
             {
                 value = entries[mainArray[index]].Value;
@@ -331,19 +293,17 @@ namespace Dictionary
 
         private bool HasElementToRemove(int index, TKey key)
         {
+            (int position, int previousPosition) = FindElement(key);
             if (mainArray[index] == -1)
             {
                 return false;
             }
-
-            int positionInEntiesArray = mainArray[index];
-            int position = FindPositionOfElement(positionInEntiesArray, key);
             if (position != -1)
             {
-                int previousPositon = GetPreviousIndex(positionInEntiesArray, key);
-                AddInFreePositionsArray(mainArray[position]);
+                entries[mainArray[position]].Next = freeIndex;
+                freeIndex = (mainArray[position]);
                 RemoveElement(position);
-                entries[previousPositon].Next = entries[position].Next;
+                entries[previousPosition].Next = entries[position].Next;
                 return true;
             }
 
@@ -354,12 +314,12 @@ namespace Dictionary
         {
             entries[index].Key = default(TKey);
             entries[index].Value = default(TValue);
-            entriesCount--;
         }
 
         private void RemoveFirstInBucket(int entriesIndex, int index)
         {
-            AddInFreePositionsArray(entriesIndex);
+            entries[entriesIndex].Next = freeIndex;
+            freeIndex = entriesIndex;
             RemoveElement(entriesIndex);
             mainArray[index] = entries[entriesIndex].Next;
 
@@ -369,25 +329,6 @@ namespace Dictionary
             }
 
             entries[entriesIndex].Next = -1;
-        }
-
-        private void AddInFreePositionsArray(int entriesIndex)
-        {
-            FreePosition freePosition = new FreePosition();
-            if (freeIndex == -1)
-            {
-                freeIndex++;
-                freePositions[freeIndex] = freePosition;
-                freePositions[freeIndex].Value = entriesIndex;
-                freePositions[freeIndex].Next = -1;
-            }
-            else
-            {
-                freeIndex++;
-                freePositions[freeIndex] = freePosition;
-                freePositions[freeIndex].Value = entriesIndex;
-                freePositions[freeIndex].Next = freePositions[0].Next;
-            }
         }
 
     }
