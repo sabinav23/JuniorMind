@@ -26,6 +26,7 @@ namespace Dictionary
         public TValue this[TKey key]
         {
             get {
+                VerifyIsNull(key);
                 int index = Find(key);
                 if (index != -1)
                 {
@@ -47,8 +48,8 @@ namespace Dictionary
         private (int index, int previous) FindElement(TKey key)
         {
             int previous = -1;
-            int positionInEntiesArray = mainArray[BucketIndex(key)];
-            for (int index = positionInEntiesArray; index != -1; index = entries[positionInEntiesArray].Next)
+            int posaition = mainArray[BucketIndex(key)];
+            for (int index = posaition; index != -1; index = entries[posaition].Next)
             {
                 if (entries[index].Key.Equals(key))
                 {
@@ -80,8 +81,7 @@ namespace Dictionary
                 }
                
                 return list;
-            }
-            
+            }          
         }
 
         public ICollection<TValue> Values {
@@ -111,13 +111,11 @@ namespace Dictionary
         }
 
         public void Add(TKey key, TValue value)
-        {            
+        {
+            VerifyIsNull(key);
             int positionInEntiesArray = BucketIndex(key);
             int previousValue = mainArray[positionInEntiesArray];
-            mainArray[positionInEntiesArray] = Count;
             int ind;
-
-            EntryContent<TKey, TValue> entry = new EntryContent<TKey, TValue>();
 
             if (freeIndex != -1)
             {
@@ -130,11 +128,13 @@ namespace Dictionary
             }
 
             mainArray[positionInEntiesArray] = ind;
+            EntryContent<TKey, TValue> entry = new EntryContent<TKey, TValue>
+            {
+                Key = key,
+                Value = value,
+                Next = previousValue,
+            };
             entries[ind] = entry;
-            entries[ind].Key = key;
-            entries[ind].Value = value;
-            entries[ind].Next = previousValue;
-
             Count++;
         }
 
@@ -152,20 +152,18 @@ namespace Dictionary
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            int positionInEntiesArray = mainArray[BucketIndex(item.Key)];
+            VerifyIsNull(item.Key);
             int index = Find(item.Key);
 
             return index != 1 && entries[index].Value.Equals(item.Value);
-
         }
 
         public bool ContainsKey(TKey key)
         {
-            int positionInEntiesArray = mainArray[BucketIndex(key)];
+            VerifyIsNull(key);
             int index = Find(key);
 
             return index != -1;
-
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -208,6 +206,7 @@ namespace Dictionary
 
         public bool Remove(TKey key)
         {
+            VerifyIsNull(key);
             var index = BucketIndex(key);
             if (entries[mainArray[index]].Key.Equals(key))
             {
@@ -237,6 +236,7 @@ namespace Dictionary
 
         private (bool deleted, TValue value) RemoveItem(TKey key, TValue value)
         {
+            VerifyIsNull(key);
             int pos = BucketIndex(key);
             (int position, int previousPosition) = FindElement(key);
             if (position == -1)
@@ -244,7 +244,7 @@ namespace Dictionary
                 return (false, value);
             }
 
-            if (entries[position].Key.Equals(key) && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
+            if (mainArray[pos].Equals(position) && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
             {
                 value = entries[position].Value;
                 RemoveFirstInBucket(position, pos);
@@ -252,13 +252,11 @@ namespace Dictionary
             }
             else
             {
-                if (position != -1)
-                {
-                    value = entries[position].Value;
-                    RemoveElement(position);
-                    entries[previousPosition].Next = entries[position].Next;
-                    return (true, value);
-                }
+                value = entries[position].Value;
+                RemoveElement(position);
+                entries[previousPosition].Next = entries[position].Next;
+
+                return (true, value);
             }
 
             return (false, value);
@@ -266,8 +264,8 @@ namespace Dictionary
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
+            VerifyIsNull(key);
             var index = BucketIndex(key);
-
             int positionInEntiesArray = mainArray[index];
             int position = Find(key);
             if (position != -1)
@@ -300,8 +298,8 @@ namespace Dictionary
             }
             if (position != -1)
             {
-                entries[mainArray[position]].Next = freeIndex;
-                freeIndex = (mainArray[position]);
+                entries[position].Next = freeIndex;
+                freeIndex = mainArray[position];
                 RemoveElement(position);
                 entries[previousPosition].Next = entries[position].Next;
                 return true;
@@ -331,5 +329,12 @@ namespace Dictionary
             entries[entriesIndex].Next = -1;
         }
 
+        public void VerifyIsNull(TKey key)
+        {
+            if (key.Equals(default(TKey)))
+            {
+                throw new ArgumentNullException();
+            }
+        }
     }
 }
