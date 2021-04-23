@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Dictionary
 {
@@ -38,9 +37,13 @@ namespace Dictionary
             set
             {
                 int index = Find(key);
-                if (index != -1 && !entries[index].Value.Equals(value))
+                if (index != -1)
                 {
                     entries[index].Value = value;
+                }
+                else
+                {
+                    Add(key, value);
                 }
             }
         }
@@ -73,7 +76,6 @@ namespace Dictionary
             {
                 var list = new List<TKey>();
                 var en = this.GetEnumerator();
-                en.MoveNext();
 
                 while (en.MoveNext())
                 {
@@ -89,7 +91,6 @@ namespace Dictionary
             {
                 var list = new List<TValue>();
                 var en = this.GetEnumerator();
-                en.MoveNext();
 
                 while (en.MoveNext())
                 {
@@ -206,17 +207,8 @@ namespace Dictionary
 
         public bool Remove(TKey key)
         {
-            VerifyIsNull(key);
-            var index = BucketIndex(key);
-            if (entries[mainArray[index]].Key.Equals(key))
-            {
-                RemoveFirstInBucket(mainArray[index], index);
-                return true;
-            }
-            else
-            {
-                return HasElementToRemove(index, key);
-            }
+            (bool IsDeleted, _) = RemoveItem(key, default(TValue));
+            return IsDeleted;
         }  
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
@@ -228,45 +220,48 @@ namespace Dictionary
         public bool Remove(TKey key, out TValue value)
         {
             (bool IsDeleted, TValue val) = RemoveItem(key, default(TValue));
-
             value = val;
-            return IsDeleted;
 
+            return IsDeleted;
         }
 
         private (bool deleted, TValue value) RemoveItem(TKey key, TValue value)
         {
             VerifyIsNull(key);
-            int pos = BucketIndex(key);
+            int bucketIndex = BucketIndex(key);
             (int position, int previousPosition) = FindElement(key);
             if (position == -1)
             {
                 return (false, value);
             }
 
-            if (mainArray[pos].Equals(position) && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
+            if (mainArray[bucketIndex] == position && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
             {
                 value = entries[position].Value;
-                RemoveFirstInBucket(position, pos);
-                return (true, value);
-            }
-            else
-            {
-                value = entries[position].Value;
-                RemoveElement(position);
-                entries[previousPosition].Next = entries[position].Next;
-
+                RemoveAtGivenIndex(position, key);
                 return (true, value);
             }
 
-            return (false, value);
+            value = entries[position].Value;
+            RemoveAtGivenIndex(position, key);
+            entries[previousPosition].Next = entries[position].Next;
+            return (true, value);
+        }
+
+        private void RemoveAtGivenIndex(int index, TKey key)
+        {
+            entries[index].Next = freeIndex;
+            freeIndex = index;
+            entries[index].Key = default(TKey);
+            entries[index].Value = default(TValue);
+            mainArray[BucketIndex(key)] = entries[index].Next;
+            Count--;
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             VerifyIsNull(key);
             var index = BucketIndex(key);
-            int positionInEntiesArray = mainArray[index];
             int position = Find(key);
             if (position != -1)
             {
@@ -289,46 +284,6 @@ namespace Dictionary
             return hash % mainArray.Length;
         }
 
-        private bool HasElementToRemove(int index, TKey key)
-        {
-            (int position, int previousPosition) = FindElement(key);
-            if (mainArray[index] == -1)
-            {
-                return false;
-            }
-            if (position != -1)
-            {
-                entries[position].Next = freeIndex;
-                freeIndex = mainArray[position];
-                RemoveElement(position);
-                entries[previousPosition].Next = entries[position].Next;
-                return true;
-            }
-
-            return false;
-        }
-
-        private void RemoveElement(int index)
-        {
-            entries[index].Key = default(TKey);
-            entries[index].Value = default(TValue);
-        }
-
-        private void RemoveFirstInBucket(int entriesIndex, int index)
-        {
-            entries[entriesIndex].Next = freeIndex;
-            freeIndex = entriesIndex;
-            RemoveElement(entriesIndex);
-            mainArray[index] = entries[entriesIndex].Next;
-
-            if (mainArray[index] == -1)
-            {
-                Count--;
-            }
-
-            entries[entriesIndex].Next = -1;
-        }
-
         public void VerifyIsNull(TKey key)
         {
             if (key.Equals(default(TKey)))
@@ -336,5 +291,6 @@ namespace Dictionary
                 throw new ArgumentNullException();
             }
         }
+
     }
 }
