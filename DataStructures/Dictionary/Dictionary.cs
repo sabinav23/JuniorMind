@@ -6,9 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Dictionary
 {
     class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>
-    {
-        
-
+    {    
         private int[] mainArray;
         private EntryContent<TKey, TValue>[] entries;
         private int freeIndex;
@@ -125,7 +123,7 @@ namespace Dictionary
             }
             else
             {
-               ind = Count;
+                ind = Count;
             }
 
             mainArray[positionInEntiesArray] = ind;
@@ -207,45 +205,57 @@ namespace Dictionary
 
         public bool Remove(TKey key)
         {
-            (bool IsDeleted, _) = RemoveItem(key, default(TValue));
-            return IsDeleted;
+            VerifyIsNull(key);
+            (int position, int previousPosition) = FindElement(key);
+            if (position == -1)
+            {
+                return false;
+            }
+            RemoveItem(key, position,  previousPosition);
+            return true;
         }  
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-           (bool IsDeleted, _) = RemoveItem(item.Key, item.Value);
-            return IsDeleted;
+            VerifyIsNull(item.Key);
+            (int position, int previousPosition) = FindElement(item.Key);
+
+            if (entries[position].Value.Equals(item.Value))
+            {
+                RemoveItem(item.Key, position, previousPosition);
+                return true;
+            }
+            return false;
         }
 
         public bool Remove(TKey key, out TValue value)
         {
-            (bool IsDeleted, TValue val) = RemoveItem(key, default(TValue));
-            value = val;
-
-            return IsDeleted;
-        }
-
-        private (bool deleted, TValue value) RemoveItem(TKey key, TValue value)
-        {
             VerifyIsNull(key);
-            int bucketIndex = BucketIndex(key);
             (int position, int previousPosition) = FindElement(key);
             if (position == -1)
             {
-                return (false, value);
+                value = default(TValue);
+                return false;
             }
-
-            if (mainArray[bucketIndex] == position && (entries[position].Value.Equals(value) || value.Equals(default(TValue))))
-            {
-                value = entries[position].Value;
-                RemoveAtGivenIndex(position, key);
-                return (true, value);
-            }
-
             value = entries[position].Value;
+            RemoveItem(key, position, previousPosition);
+
+            return true;
+        }
+
+        private void RemoveItem(TKey key, int position, int previousPosition)
+        {
+            int bucketIndex = BucketIndex(key);
             RemoveAtGivenIndex(position, key);
-            entries[previousPosition].Next = entries[position].Next;
-            return (true, value);
+
+            if (mainArray[bucketIndex] == position)
+            {
+               mainArray[bucketIndex] = entries[position].Next;
+            }
+            else
+            {
+                entries[previousPosition].Next = entries[position].Next;
+            }
         }
 
         private void RemoveAtGivenIndex(int index, TKey key)
@@ -254,7 +264,6 @@ namespace Dictionary
             freeIndex = index;
             entries[index].Key = default(TKey);
             entries[index].Value = default(TValue);
-            mainArray[BucketIndex(key)] = entries[index].Next;
             Count--;
         }
 
@@ -291,6 +300,5 @@ namespace Dictionary
                 throw new ArgumentNullException();
             }
         }
-
     }
 }
