@@ -16,6 +16,24 @@ namespace ExtensionMethods
         }
 
         [Fact]
+        public void CatchesExceptionArgumentNullSource()
+        {
+            int[] elements = null;
+
+            Exception exception = Assert.Throws<ArgumentNullException>(() => ExtensionMethod.All(elements, e => e < 10));
+            Assert.Equal("Value cannot be null. (Parameter 'source')", exception.Message);
+        }
+
+        [Fact]
+        public void CatchesExceptionArgumentNullPredicate()
+        {
+            int[] elements = new int[] { 1, 2, 3, 4, 5 };
+
+            Exception exception = Assert.Throws<ArgumentNullException>(() => ExtensionMethod.All(elements, null));
+            Assert.Equal("Value cannot be null. (Parameter 'predicate')", exception.Message);
+        }
+
+        [Fact]
         public void ReturnFalseWhenNotAllMatch()
         {
             int[] elements = new int[] { 1, 2, 3, 15, 5 };
@@ -49,6 +67,41 @@ namespace ExtensionMethods
 
             int first = ExtensionMethod.First(elements, e => e < 10);
             Assert.True(first == 5);
+        }
+
+        [Fact]
+        public void SelectMany()
+        {
+            var st1 = new Student(1, "John", 18);
+            var st2 = new Student(2, "Steve", 15);
+            var st3 = new Student(3, "Bill", 25);
+            var st4 = new Student(4, "Ram", 20);
+
+            var class1 = new List<Student> { st1, st3 };
+            var class2 = new List<Student> { st2, st4 };
+            var tch1 = new Teacher();
+            var tch2 = new Teacher();
+            tch1.Name = "Borindg";
+            tch1.Students = class1;
+            tch2.Name = "Cool";
+            tch2.Students = class2;
+
+            var teachers = new List<Teacher> { tch1, tch2 };
+
+            var result = teachers.SelectMany(e => e.Students);
+
+            IEnumerator<Student> en = result.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(st1, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st3, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st2, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st4, en.Current);
+            Assert.False(en.MoveNext());
+
         }
 
         [Fact]
@@ -104,6 +157,203 @@ namespace ExtensionMethods
             Assert.Equal("soarele e galben", en.Current);
             Assert.True(en.MoveNext());
             Assert.Equal("vremea e minunata", en.Current);
+            Assert.False(en.MoveNext());
+        }
+
+        [Fact]
+        public void Aggregate()
+        {
+            int[] elements = { 4, 8, 8, 3, 9, 0, 7, 8, 2 };
+
+            var result = ExtensionMethod.Aggregate(elements, 0,  (a, b) => b % 2 == 0? a + 1: a);
+            Assert.True(result == 6);
+        }
+
+        [Fact]
+        public void Join()
+        {
+            int[] arr1 = { 4, 8, 9, 5, 10 };
+            int[] arr2 = { 5, 12, 7, 9, 2 };
+
+            var join = ExtensionMethod.Join(arr1, arr2, a => a, b => b, (a, b) => a);
+            IEnumerator<int> en = (IEnumerator<int>)join.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(9, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.False(en.MoveNext());
+        }
+        
+        [Fact]
+        public void Distinct()
+        {
+            int[] arr1 = { 4, 8, 4, 5, 9, 5, 10 };
+
+            var comparer = new Compare<int>();
+            var distinct = ExtensionMethod.Distinct(arr1, comparer);
+            IEnumerator<int> en = (IEnumerator<int>)distinct.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(4, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(8, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(9, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(10, en.Current);
+            Assert.False(en.MoveNext());
+        }
+
+        [Fact]
+        public void Union()
+        {
+            int[] arr1 = { 4, 8, 4, 5, 9, 5, 10 };
+            int[] arr2 = { 5, 8, 4, 5, 12, 51, 19 };
+
+            var comparer = new Compare<int>();
+            var union = ExtensionMethod.Union(arr1, arr2, comparer);
+            IEnumerator<int> en = (IEnumerator<int>)union.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(4, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(8, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(9, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(10, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(12, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(51, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(19, en.Current);
+            Assert.False(en.MoveNext());
+        }
+
+        [Fact]
+        public void Intersect()
+        {
+            int[] arr1 = { 4, 8, 4, 5, 9, 5, 10 };
+            int[] arr2 = { 5, 8, 4, 5, 12, 51, 19 };
+
+            var comparer = new Compare<int>();
+            var intersect = ExtensionMethod.Intersect(arr1, arr2, comparer);
+            IEnumerator<int> en = (IEnumerator<int>)intersect.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(4, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(8, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(5, en.Current);
+            Assert.False(en.MoveNext());
+        }
+        [Fact]
+        public void Except()
+        {
+            int[] arr1 = { 4, 8, 4, 5, 9, 5, 10 };
+            int[] arr2 = { 5, 8, 4, 5, 12, 51, 19 };
+
+            var comparer = new Compare<int>();
+            var except = ExtensionMethod.Except(arr1, arr2, comparer);
+            IEnumerator<int> en = (IEnumerator<int>)except.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(9, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(10, en.Current);
+            Assert.False(en.MoveNext());
+        }
+
+        [Fact]
+        public void GroupBy()
+        {
+            List<Student> students = new List<Student>();
+            List<double> numbers = new List<double>();
+            numbers.Add(8.3);
+            numbers.Add(4.9);
+            numbers.Add(1.5);
+            numbers.Add(8.8);
+            numbers.Add(4.7);
+
+            var comparer = new Compare<double>();
+ 
+            var result = ExtensionMethod.GroupBy(numbers, e => Math.Floor(e), e => e, (baseNumber, elements) => new NumberInfo(baseNumber, elements), comparer);
+        }
+
+        [Fact]
+        public void OrderBy()
+        {
+            string[] fruits = { "apricot", "orange", "banana", "mango", "apple", "grape", "strawberry" };
+            var comparer = new InitialComparer();
+            
+
+            var result = ExtensionMethod.OrderBy(fruits, e => e, comparer);
+            var en = result.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal("apple", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("apricot", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("banana", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("grape", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("mango", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("orange", en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal("strawberry", en.Current);
+            Assert.False(en.MoveNext());
+        }
+
+        [Fact]
+        public void ThenBy()
+        {
+           
+            var comparer = new InitialComparer();
+
+            IList<Student> studentList = new List<Student>();
+
+            var intComparer = new IntComparer();
+
+            var st1 = new Student(1, "John", 18);
+            var st2 = new Student(2, "Steve", 15);
+            var st3 = new Student(3, "Bill", 25);
+            var st4 = new Student(4, "Ram", 20);
+            var st5 = new Student(5, "Ron", 19);
+            var st6 = new Student(6, "Ra,", 18);
+
+            studentList.Add(st1);
+            studentList.Add(st2);
+            studentList.Add(st3);
+            studentList.Add(st4);
+            studentList.Add(st5);
+            studentList.Add(st6);
+
+            var firstResult = ExtensionMethod.OrderBy(studentList, e => e.Name, comparer);
+            var result = ExtensionMethod.ThenBy(firstResult, e => e.Age, intComparer);
+            var en = result.GetEnumerator();
+
+            Assert.True(en.MoveNext());
+            Assert.Equal(st3, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st1, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st6, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st4, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st5, en.Current);
+            Assert.True(en.MoveNext());
+            Assert.Equal(st2, en.Current);
             Assert.False(en.MoveNext());
         }
     }
