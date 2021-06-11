@@ -16,7 +16,7 @@ namespace ExtensionMethods
         }
         public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> comparer, bool descending)
         {
-            var keyComparer = new Comparer<TSource, TKey>(keySelector, comparer);
+            var keyComparer = new Comparator<TSource, TKey>(keySelector, comparer);
 
             return new OrderedEnum<TSource>(source, new MultipleComparer<TSource>(this.comparer, keyComparer));
         }

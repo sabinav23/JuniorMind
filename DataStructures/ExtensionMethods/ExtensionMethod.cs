@@ -249,18 +249,9 @@ namespace ExtensionMethods
             EnsureNotNull(keySelector, nameof(keySelector));
             EnsureNotNull(elementSelector, nameof(elementSelector));
 
-            var dictionary = new Dictionary<TKey, TElement>(comparer);
-            var results = new List<TResult>();
-            foreach (TSource s in source)
-            {
-                TKey key = keySelector(s);
-                EnsureNotNull(key, nameof(key));
+            var group = source.GroupBy(keySelector, elementSelector, comparer);
+            return group.Select(g => resultSelector(g.Key, g));
 
-                TElement element = elementSelector(s);
-                dictionary.Add(key, element);
-
-                yield return resultSelector(key, dictionary.Values);
-            }
         }
 
         public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
@@ -270,7 +261,7 @@ namespace ExtensionMethods
         {
             EnsureNotNull(source, nameof(source));
             EnsureNotNull(keySelector, nameof(keySelector));
-            var newComparer = new Comparer<TSource, TKey>(keySelector, comparer);
+            var newComparer = new Comparator<TSource, TKey>(keySelector, comparer);
 
             return new OrderedEnum<TSource>(source, newComparer);
         }
