@@ -13,12 +13,12 @@ namespace ExtensionMethods
             this.quantity = quantity;
         }
 
-        public void UpdateStock(string productName, int bought)
+        public void UpdateStock(Product product, int bought)
         {
             this.quantity -= bought;
             if (this.quantity <= 10)
             {
-                DisplayAlertMessage(quantity, productName);
+                DisplayAlertMessage(quantity, product );
             }
         }
 
@@ -26,19 +26,19 @@ namespace ExtensionMethods
         {
             return this.quantity;
         }
-        private void DisplayAlertMessage(int quantity, string productName)
+        private void DisplayAlertMessage(int quantity, Product product)
         {
             if (quantity < 10 && quantity >= 5)
             {
-                Console.WriteLine("Only " + quantity + " "  + productName + " in stock");
+                Console.WriteLine("Only " + quantity + " "  + product + " in stock");
             }
             if (quantity < 5 && quantity >= 2)
             {
-                Console.WriteLine("Only " + quantity + " " + productName + " in stock");
+                Console.WriteLine("Only " + quantity + " " + product + " in stock");
             }
             if (quantity < 2)
             {
-                Console.WriteLine("Only " + quantity + " " + productName + " in stock");
+                Console.WriteLine("Only " + quantity + " " + product + " in stock");
             }
         }
     }

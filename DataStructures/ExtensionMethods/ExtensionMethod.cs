@@ -7,7 +7,6 @@ namespace ExtensionMethods
 {
     public static class ExtensionMethod
     {
-
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             EnsureNotNull(source, nameof(source));

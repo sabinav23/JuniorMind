@@ -4,10 +4,9 @@ using System.Text;
 
 namespace ExtensionMethods
 {
-    public class Product
+    public class WordOccurrance
     {
         public string Name { get; set; }
-        public ICollection<Feature> Features { get; set; }
-        
+        public int Count { get; set; }
     }
 }
