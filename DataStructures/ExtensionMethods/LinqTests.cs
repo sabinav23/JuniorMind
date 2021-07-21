@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using Xunit;
 using static Xunit.Assert;
 
@@ -13,15 +16,20 @@ namespace ExtensionMethods
 
     public class LinqTests
     {
-    /*    [Fact]
-        public void BuyProducts()
+        [Fact]
+        public void ProductStock()
         {
-            var p1 = new Product("ciocolata", new Stock(50));
-            var p2 = new Product("prajiturica", new Stock(20));
+            string name = "tv";
+            Stock s = new Stock(name, 15);
 
-            p1.BuyProduct(45);
-            Assert.True(p1.GetStock() == 5);
-        }*/
+            var notificationsCount = 0;
+            Action<int, string> callback = (q, n) => notificationsCount++;
+            
+            s.UpdateStock(7, callback);
+            s.UpdateStock(5, callback);
+            
+            Assert.Equal(2, notificationsCount);
+        }
 
         [Fact]
         public void VowelsAndCons()

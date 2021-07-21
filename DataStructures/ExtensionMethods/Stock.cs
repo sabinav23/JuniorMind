@@ -1,44 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ExtensionMethods
 {
-    class Stock
+    public class Stock
     {
-        private int quantity;
+        public string Name { get; set; }
+        private int Quantity { get; set; }
+        private readonly IEnumerable<int> threshold = new int[] {10, 5, 2};
+        private Action<int, string> notify;
 
-        public Stock(int quantity)
+        public Stock(string name, int quantity, Action<int, string> notify)
         {
-            this.quantity = quantity;
+            this.Name = name;
+            this.Quantity = quantity;
+            this.notify = notify;
         }
 
-        public void UpdateStock(Product product, int bought)
+        public void UpdateStock(int bought)
         {
-            this.quantity -= bought;
-            if (this.quantity <= 10)
-            {
-                DisplayAlertMessage(quantity, product );
-            }
-        }
+            var originalQuantity = this.Quantity;
+            this.Quantity -= bought;
 
-        public int GetQuantity()
-        {
-            return this.quantity;
-        }
-        private void DisplayAlertMessage(int quantity, Product product)
-        {
-            if (quantity < 10 && quantity >= 5)
+            var found = threshold.FirstOrDefault(x => originalQuantity > x && this.Quantity < x);
+
+            if (found != default)
             {
-                Console.WriteLine("Only " + quantity + " "  + product + " in stock");
-            }
-            if (quantity < 5 && quantity >= 2)
-            {
-                Console.WriteLine("Only " + quantity + " " + product + " in stock");
-            }
-            if (quantity < 2)
-            {
-                Console.WriteLine("Only " + quantity + " " + product + " in stock");
+                notify(Quantity, Name);
             }
         }
     }
