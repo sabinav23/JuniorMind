@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31019.35
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanITpoker", "PlanITpoker\PlanITpoker.csproj", "{3DE9E862-FFE2-4132-80E6-5342D9B75844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanITpoker.Specs", "PlanITpoker.Specs\PlanITpoker.Specs.csproj", "{6C278E41-553F-46B9-A03B-0A5699430DDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DE9E862-FFE2-4132-80E6-5342D9B75844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE9E862-FFE2-4132-80E6-5342D9B75844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE9E862-FFE2-4132-80E6-5342D9B75844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE9E862-FFE2-4132-80E6-5342D9B75844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C278E41-553F-46B9-A03B-0A5699430DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C278E41-553F-46B9-A03B-0A5699430DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C278E41-553F-46B9-A03B-0A5699430DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C278E41-553F-46B9-A03B-0A5699430DDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A084796-4391-41A4-9DD9-AB4710F51D61}
+	EndGlobalSection
+EndGlobal
